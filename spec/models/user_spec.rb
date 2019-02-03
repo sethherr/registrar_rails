@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  it_behaves_like "phone_numberable"
-
   describe "factory" do
     let(:user) { FactoryBot.create(:user) }
     it "creates a valid user" do

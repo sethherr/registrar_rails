@@ -16,7 +16,7 @@ gem "puma", "~> 3.11"
 # API stuff
 gem "active_model_serializers", "~> 0.8.3" # Use active model serializers to serialize JSON. Use version 0.8 because it supports caching
 gem "kaminari" # Pagination
-gem "grape", "~> 1.0.3" # DSL for APIs
+gem "grape", "~> 1.1.0" # DSL for APIs
 gem "grape_logging" # Ensuring we get logs from Grape
 gem "grape-swagger" # Swagger spec for Grape
 gem "api-pagination" # Paginate the APIs
