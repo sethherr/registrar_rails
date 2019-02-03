@@ -2,7 +2,8 @@
 
 module ApplicationHelper
   def main_container_class
-    @fluid_container ? "container-fluid" : "container"
+    return "container-fluid" if @fluid_container 
+    in_admin? ? "container-fluid" : "container"
   end
 
   def page_title
