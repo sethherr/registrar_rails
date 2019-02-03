@@ -31,4 +31,17 @@ RSpec.describe User, type: :model do
       expect(User.admin_search("Herr").pluck(:id)).to eq([user.id])
     end
   end
+
+  describe "integrated" do
+    it "returns false" do
+      expect(User.new.integrated?("bike_index")).to be_falsey
+    end
+    context "integrated with bike_index" do
+      let(:user_integration) { FactoryBot.create(:user_integration_bike_index) }
+      let(:user) { user_integration.user }
+      it "returns truthy" do
+        expect(user.integrated?("bike_index")).to be_truthy
+      end
+    end
+  end
 end

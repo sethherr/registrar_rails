@@ -255,10 +255,10 @@ Devise.setup do |config|
 
   # ==> OmniAuth
   # Bike Index omniauth with all available scopes
-  # config.omniauth :bike_index,
-  #                 Rails.application.credentials.bike_index[:app_id],
-  #                 Rails.application.credentials.bike_index[:app_secret],
-  #                 scope: "public read_user read_bikes read_organization_membership unconfirmed",
+  config.omniauth :bike_index,
+                  Rails.application.credentials.bike_index[:app_id],
+                  Rails.application.credentials.bike_index[:app_secret],
+                  scope: "read_user read_bikes read_organization_membership"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
