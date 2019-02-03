@@ -1,6 +1,20 @@
 .row.main-title-header
   .col
     %h3
-      Welcome #{@user.name}!
+      Welcome #{current_user.display_name}
   .col-md-3.text-md-right
-    = link_to "Edit account", edit_account_path, class: "btn btn-success"
+    = link_to "Edit account", edit_account_path, class: "btn btn-outline-secondary"
+
+.card.mt-4
+  .card-body
+    .card-title
+      %h4
+        Your Authorizations
+    .card-text
+      %ul.mt-4
+        %li
+          Bike Index
+          - if current_user.integrated?("bike_index")
+            %span.text-success authorized
+          - else
+            = link_to "Authorize Bike Index", user_bike_index_omniauth_authorize_path, class: "btn btn-sm btn-success"

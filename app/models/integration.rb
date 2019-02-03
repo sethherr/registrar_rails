@@ -1,2 +1,0 @@
-class Integration < ApplicationRecord
-end

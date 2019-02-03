@@ -78,14 +78,23 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: integrations; Type: TABLE; Schema: public; Owner: -
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.integrations (
+CREATE TABLE public.schema_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: user_integrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_integrations (
     id bigint NOT NULL,
     user_id bigint,
     auth_hash json,
-    provider character varying,
+    provider integer,
     external_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -93,10 +102,10 @@ CREATE TABLE public.integrations (
 
 
 --
--- Name: integrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: user_integrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.integrations_id_seq
+CREATE SEQUENCE public.user_integrations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -105,19 +114,10 @@ CREATE SEQUENCE public.integrations_id_seq
 
 
 --
--- Name: integrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: user_integrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.integrations_id_seq OWNED BY public.integrations.id;
-
-
---
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.schema_migrations (
-    version character varying NOT NULL
-);
+ALTER SEQUENCE public.user_integrations_id_seq OWNED BY public.user_integrations.id;
 
 
 --
@@ -169,10 +169,10 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: integrations id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: user_integrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.integrations ALTER COLUMN id SET DEFAULT nextval('public.integrations_id_seq'::regclass);
+ALTER TABLE ONLY public.user_integrations ALTER COLUMN id SET DEFAULT nextval('public.user_integrations_id_seq'::regclass);
 
 
 --
@@ -191,19 +191,19 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: integrations integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.integrations
-    ADD CONSTRAINT integrations_pkey PRIMARY KEY (id);
-
-
---
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: user_integrations user_integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_integrations
+    ADD CONSTRAINT user_integrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -215,10 +215,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_integrations_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_user_integrations_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_integrations_on_user_id ON public.integrations USING btree (user_id);
+CREATE INDEX index_user_integrations_on_user_id ON public.user_integrations USING btree (user_id);
 
 
 --

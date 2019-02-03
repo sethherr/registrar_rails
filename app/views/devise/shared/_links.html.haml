@@ -1,3 +1,7 @@
+- if devise_mapping.omniauthable? && Rails.application.credentials.bike_index[:app_secret].present?
+  - verb = controller_name == "sessions" ? "in" : "up"
+  = link_to "Sign #{verb} with Bike Index", user_bike_index_omniauth_authorize_path, class: "btn btn-secondary"
+  .mb-2
 .form-group
   - if controller_name != "sessions"
     = link_to "Sign in", new_session_path(resource_name)
@@ -11,5 +15,3 @@
   - if devise_mapping.confirmable? && controller_name != "confirmations"
     = link_to "Didn't receive confirmation instructions", new_confirmation_path(resource_name)
     %br/
-  - if devise_mapping.omniauthable? && Rails.application.credentials.bike_index[:app_secret].present?
-    = link_to "Sign in with Bike Index", bike_index_sign_up_link

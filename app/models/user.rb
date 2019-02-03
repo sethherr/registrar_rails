@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :omniauthable, :confirmable,
          :recoverable, :rememberable, :trackable, omniauth_providers: [:bike_index]
 
-  has_many :integrations
+  has_many :user_integrations
 
   enum admin_role: ADMIN_ROLE_ENUM
 
@@ -29,26 +29,6 @@ class User < ActiveRecord::Base
     results.any? ? results : where("phone_number ILIKE ?", "%#{str.strip}%")
   end
 
-  def self.from_omniauth(uid, auth)
-    # user = where(bike_index_id: uid.to_i).first
-    # user ||= where(email: auth.info.email).first
-    # if user.present?
-    #   # I remember rails issues where json fields weren't registering as changed
-    #   # ... and therefor weren't updating. To play it safe, force updating auth
-    #   # And force update email, skipping devise reconfirmation stuff
-    #   user.update_columns(bike_index_auth: stored_bike_index_auth_hash(auth), email: auth.info.email)
-    #   # Hopefully this only resaves the record if the value has changed...
-    #   user.update_attributes(manually_confirm: true, bike_index_id: uid) unless user.bike_index_id.present?
-    #   return user
-    # end
-    # User.create(bike_index_id: uid,
-    #             email: auth.info.email,
-    #             password: Devise.friendly_token[0, 20],
-    #             name: auth.info.name,
-    #             manually_confirm: true,
-    #             bike_index_auth: stored_bike_index_auth_hash(auth))
-  end
-
   def admin?; admin_role != "not" end
 
   def display_name; name.present? ? name : email end
@@ -61,6 +41,10 @@ class User < ActiveRecord::Base
   def manually_confirm=(val)
     return if confirmed?
     confirm if ActiveRecord::Type::Boolean.new.cast(val)
+  end
+
+  def integrated?(provider)
+    user_integrations.where(provider: provider).any?
   end
 
   def set_calculated_attributes

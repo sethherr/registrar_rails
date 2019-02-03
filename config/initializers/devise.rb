@@ -258,7 +258,7 @@ Devise.setup do |config|
   config.omniauth :bike_index,
                   Rails.application.credentials.bike_index[:app_id],
                   Rails.application.credentials.bike_index[:app_secret],
-                  scope: "public read_user read_bikes read_organization_membership"
+                  scope: "read_user read_bikes read_organization_membership"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
