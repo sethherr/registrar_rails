@@ -23,7 +23,6 @@ RSpec.describe base_url, type: :request do
         }
       end
       it "responds" do
-        expect(user.vehicles).to eq([vehicle])
         get base_url, headers: authorization_headers
         expect(json_result["current_user"]).to eq target.as_json
         expect(response.code).to eq("200")

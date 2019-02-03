@@ -35,6 +35,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
       # Our attributes
       t.integer :admin_role, default: 0, null: 0
       t.text :admin_search_field
+      t.string :api_key
 
       # Name, because it's nice
       t.string :name

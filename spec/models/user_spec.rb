@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
     let(:user) { FactoryBot.create(:user) }
     it "creates a valid user" do
       expect(user.valid?).to be_truthy
-      expect(user.employee?).to be_falsey
+      expect(user.admin?).to be_falsey
       expect(user.api_key).to be_present
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "admin_search" do
-    let!(:user) { FactoryBot.create(:user, legacy_uuid: "ZZZZ-3234234", email: "newseth@bikeindex.org", phone_number: "717.725.8428", first_name: "Seth", last_name: "Herr") }
+    let!(:user) { FactoryBot.create(:user, email: "newseth@bikeindex.org", name: "Seth herr") }
     # Running this an integration test - since all of it closely interconnected with a bunch of disparate parts
     # I'd prefer to test the full process of creating merged users, setting the admin_search_field and search finding expected values
     it "works correctly" do

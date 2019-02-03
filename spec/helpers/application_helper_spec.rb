@@ -29,23 +29,11 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe "active_link" do
     context "match_controller" do
-      let(:request) { double("request", url: new_admin_promo_code_path) }
+      let(:request) { double("request", url: admin_users_path) }
       before { allow(helper).to receive(:request).and_return(request) }
       it "returns the link active with match_controller if on the controller" do
-        expect(active_link("Organizations", new_admin_promo_code_path, class: "seeeeeeee", id: "something", match_controller: true))
-          .to eq '<a class="seeeeeeee active" id="something" href="' + new_admin_promo_code_path + '">Organizations</a>'
-      end
-    end
-  end
-
-  describe "status_class" do
-    it "is text-danger for inactive" do
-      expect(status_class("inactive")).to eq "text-danger"
-    end
-    context "kiosk_room_membership_purchase" do
-      let(:obj) { KioskRoomMembershipPurchase.new }
-      it "is text-warning" do
-        expect(status_class(obj)).to eq "text-warning"
+        expect(active_link("Organizations", admin_users_path, class: "seeeeeeee", id: "something", match_controller: true))
+          .to eq '<a class="seeeeeeee active" id="something" href="' + admin_users_path + '">Organizations</a>'
       end
     end
   end

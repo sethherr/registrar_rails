@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   def self.admin_roles; ADMIN_ROLE_ENUM.keys.map(&:to_s) end
 
   # Don't call this directly, use admin_search
-  pg_search_scope :admin_search_scope, using: %i[tsearch dmetaphone], ignoring: :accents,
+  pg_search_scope :admin_search_scope, ignoring: :accents,
                                        against: %i[email name admin_search_field]
   # HACK: pg_search doesn't find phone numbers - so search for phone numbers if we don't find anything
   def self.admin_search(str)
@@ -62,11 +62,19 @@ class User < ActiveRecord::Base
   end
 
   def set_calculated_attributes
+    self.api_key ||= generate_api_key
     # To avoid having to search through json fields, just throw the relevant things into a new field
     self.admin_search_field = calculated_admin_search_field
   end
 
   private
+
+  # variable length, using two random things, probs ok?
+  def generate_api_key
+    unique_key = Devise.friendly_token + SecureRandom.random_number(10000).to_s
+    return unique_key unless self.class.where(api_key: unique_key).any? { |i| i.id != id }
+    generate_api_key # recall if it was a duplicate ;)
+  end
 
   def calculated_admin_search_field
     "" # eventually will add more

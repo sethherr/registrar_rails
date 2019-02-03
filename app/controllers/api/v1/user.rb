@@ -6,7 +6,7 @@ class API::V1::User < API::Base
     get "/" do
       {
         current_user: {
-          info: "nothing here"
+          info: current_user && "nothing here"
         }
       }
     end

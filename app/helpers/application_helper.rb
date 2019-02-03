@@ -49,17 +49,6 @@ module ApplicationHelper
     end
   end
 
-  def status_class(obj_or_status)
-    status = obj_or_status.is_a?(String) ? obj_or_status : obj_or_status.status
-    case status
-    when "active" then "text-success"
-    when "expired", "inactive" then "text-danger"
-    when "pending", "needs_renewal" then "text-warning"
-    else
-      ""
-    end
-  end
-
   def sortable_search_params
     search_param_keys = params.keys.select { |k| k.to_s.match(/\Asearch_/) }
     params.permit(:direction, :sort, :user_id, *search_param_keys)

@@ -22,6 +22,45 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
+
+
+--
+-- Name: unaccent; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION unaccent; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
+
+
+--
+-- Name: pg_search_dmetaphone(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.pg_search_dmetaphone(text) RETURNS text
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+  SELECT array_to_string(ARRAY(SELECT dmetaphone(unnest(regexp_split_to_array($1, E'\\s+')))), ' ')
+$_$;
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -69,6 +108,7 @@ CREATE TABLE public.users (
     unconfirmed_email character varying,
     admin_role integer DEFAULT 0,
     admin_search_field text,
+    api_key character varying,
     name character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -146,6 +186,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20190130221535');
+('20190130221535'),
+('20190203031814');
 
 
