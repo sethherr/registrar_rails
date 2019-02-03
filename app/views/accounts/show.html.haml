@@ -5,13 +5,19 @@
   .col-md-3.text-md-right
     = link_to "Edit account", edit_account_path, class: "btn btn-outline-secondary"
 
-.card.mt-4
+.card.mt-4.account-authorizations-list
   .card-body
     .card-title
       %h4
         Your Authorizations
     .card-text
       %ul.mt-4
+        %li
+          GlobaliD
+          - if current_user.integrated?("globalid")
+            %span.text-success authorized
+          - else
+            = link_to "Authorize GlobaliD", "#", class: "btn btn-sm btn-success"
         %li
           Bike Index
           - if current_user.integrated?("bike_index")

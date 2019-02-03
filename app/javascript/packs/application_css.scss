@@ -3,7 +3,7 @@
 // add the convenience of text-color
 $text-color: #212529;
 // Add our utility classes
-@import "../source/stylesheets/registrar_styles/utils";
+@import "../source/stylesheets/component_styles/utils";
 
 // Some special overrides
 .btn-info,
@@ -12,9 +12,12 @@ $text-color: #212529;
 }
 
 // Add our component styles
-@import "../source/stylesheets/registrar_styles/pagination";
-@import "../source/stylesheets/registrar_styles/alerts";
-@import "../source/stylesheets/registrar_styles/table_extensions";
+@import "../source/stylesheets/component_styles/pagination";
+@import "../source/stylesheets/component_styles/alerts";
+@import "../source/stylesheets/component_styles/table_extensions";
+
+// Our per-page styles
+@import "../source/stylesheets/user_styles/account";
 
 // Our admin styles
 @import "../source/stylesheets/admin_styles/admin_navbar";

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserIntegration < ApplicationRecord
-  PROVIDER_ENUM = { global_id: 0, bike_index: 1 }.freeze
+  PROVIDER_ENUM = { globalid: 0, bike_index: 1 }.freeze
 
   belongs_to :user
 
