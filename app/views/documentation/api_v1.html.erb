@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= page_title %></title>
+  <%= stylesheet_link_tag 'documentation', media: 'all' %>
+  <link href='/swagger_dist/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='/swagger_dist/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='/swagger_dist/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='/swagger_dist/css/reset.css' media='print' rel='stylesheet' type='text/css'/>
+  <link href='/swagger_dist/css/print.css' media='print' rel='stylesheet' type='text/css'/>
+
+  <script src='/swagger_dist/lib/object-assign-pollyfill.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/jquery-1.8.0.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/jquery.slideto.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/jquery.wiggle.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/handlebars-4.0.5.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/lodash.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/backbone-min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/swagger-ui.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/highlight.9.1.0.pack.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/highlight.9.1.0.pack_extended.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/jsoneditor.min.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/marked.js' type='text/javascript'></script>
+  <script src='/swagger_dist/lib/swagger-oauth.js' type='text/javascript'></script>
+
+
+  <script type="text/javascript">
+    $(function () {
+      var url = "<%= @swagger_path %>";
+
+      hljs.configure({
+        highlightSizeThreshold: 5000
+      });
+
+      function addApiKeyAuthorization() {
+        var key = encodeURIComponent($('#input_apiKey').val());
+        if (key && key.trim() != "") {
+          var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("Authorization", "Bearer " + key, "header");
+          window.swaggerUi.api.clientAuthorizations.add("bearer", apiKeyAuth);
+          log("added key " + key);
+        }
+      }
+
+      window.swaggerUi = new SwaggerUi({
+        url: url,
+        dom_id: "swagger-ui-container",
+        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+        validatorUrl: null,
+        docExpansion: 'list',
+        jsonEditor: false,
+        onComplete: function(swaggerApi, swaggerUi) {
+          // Hide the actual authorization dialog because it doesn't correctly format the header
+          $('#auth_container .authorize__btn').hide()
+        },
+        defaultModelRendering: 'schema',
+        showRequestHeaders: false,
+        showOperationIds: false
+      });
+
+      window.swaggerUi.load();
+
+      // Add watcher for API Key change and update, make it work
+      $("#input_apiKey").change(addApiKeyAuthorization);
+      addApiKeyAuthorization()
+
+      function log() {
+        if ('console' in window) {
+          console.log.apply(console, arguments);
+        }
+      }
+  });
+  </script>
+</head>
+
+<body class="swagger-section" id="swagger-body" style="padding-bottom: 40px;">
+  <div id='header'>
+    <a class="navbar-brand" href="<%= root_url %>">Registrar</a>
+    <div class="swagger-ui-wrap">
+      <form id='api_selector'>
+        <div class='input'><input placeholder="http://<%= ENV["BASE_DOMAIN"] %>/api/v1" id="input_baseUrl" name="baseUrl" type="text"/></div>
+        <div id='auth_container'><input type='text' id='input_apiKey' placeholder='API Key' value="<%= current_user&.api_key %>" /></div>
+        <div class='input'><a id="explore" class="header__btn" href="#" data-sw-translate>Explore</a></div>
+      </form>
+    </div>
+  </div>
+  <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+  <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+  <div class="registrar-documentation-notes" style="margin: 30px auto; max-width: 960px">
+    <h2>Additional notes:</h2>
+    <ul>
+      <li><strong>Format</strong>: Always JSON</li>
+      <li>
+        <strong>Time</strong>: Always uses unix timestamps (seconds since since Jan 01 1970 UTC)
+      </li>
+    </ul>
+    <h3>Authentication</h3>
+    <p><strong>All requests require authentication</strong> with a user's API key. You can find your API on <%= link_to "your settings page", edit_user_registration_path %>.</p>
+    <p>
+      Put your API key in the Authorization header
+      <pre><code>"Authorization": "Bearer {Your API key}"</code></pre>
+      (click "Try it out!" on one of the above endpoints and check out the Curl request to see a demonstration)
+    </p>
+    <% if current_user.present? %>
+      <p>Your API Key is automatically added to the API key field in the header and will authenticate all requests you make on this page</p>
+    <% else %>
+      <p>If you <%= link_to "log in", new_user_session_path %> your API Key will automatically be included in these requests</p>
+    <% end %>
+    <h3>Errors</h3>
+    <p>
+      Errors are in JSON formatted like
+      <pre><code>{ "error": "Error Message" }</code></pre>
+      There <em>may</em> be extra key value pairs.
+    </p>
+    <p>Error codes we use:</p>
+    <ul>
+      <li>
+        <strong>400</strong>: Invalid parameters
+      </li>
+      <li>
+        <strong>401</strong>: Unauthorized. You needed to authenticate and failed to
+      </li>
+      <li>
+        <strong>403</strong>: Forbidden. Request valid, but forbidden for some reason (other than <em>unauthorized</em> or <em>invalid payment</em>)
+      </li>
+      <li>
+        <strong>404</strong>: Not Found. Something you were looking for wasn't found
+      </li>
+      <li>
+        <strong>500</strong>: Something broke on our side
+      </li>
+    </ul>
+    <p>
+      If you see <strong>any other error code</strong> or error format, please let us know!
+    </p>
+  </div>
+</body>
+</html>

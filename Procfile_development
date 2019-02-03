@@ -1,0 +1,4 @@
+web: bundle exec puma -t 5:5 -p 3009 -e ${RACK_ENV:-development}
+webpacker: ./bin/webpack-dev-server # Live update webpack js
+worker_critical: bundle exec sidekiq -q default -q mailers
+log: tail -f log/development.log

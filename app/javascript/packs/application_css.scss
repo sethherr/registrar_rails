@@ -1,0 +1,21 @@
+// Add our variables - which include overrides to bootstrap
+@import "~bootstrap/scss/bootstrap";
+// add the convenience of text-color
+$text-color: #212529;
+// Add our utility classes
+@import "../source/stylesheets/registrar_styles/utils";
+
+// Some special overrides
+.btn-info,
+.btn-success {
+  color: #fff !important; // !important to override hover color
+}
+
+// Add our component styles
+@import "../source/stylesheets/registrar_styles/pagination";
+@import "../source/stylesheets/registrar_styles/alerts";
+@import "../source/stylesheets/registrar_styles/table_extensions";
+
+// Our admin styles
+@import "../source/stylesheets/admin_styles/admin_navbar";
+@import "../source/stylesheets/admin_styles/admin_header";

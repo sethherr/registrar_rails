@@ -1,0 +1,30 @@
+.table-list {
+  @extend .table;
+  @extend .table-striped;
+  @extend .table-bordered;
+  @extend .table-sm;
+  tr td:first-child {
+    font-size: 80%;
+    font-style: italic;
+  }
+}
+
+.table-wrapper {
+  // Enable scrolling on sm screens
+  @include media-breakpoint-down(sm) {
+    overflow-x: auto;
+  }
+
+  // Make it edge to edge on xs screens
+  @include media-breakpoint-down(xs) {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
+
+// Some tables have skip-user as an option. Because of caching, we always want the same columns
+// So include the user and hide it the class is enabled
+.skip-user .user-cell,
+.skip-parking-location .parking-location-cell {
+  display: none;
+}

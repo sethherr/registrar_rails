@@ -1,0 +1,9 @@
+.flash-alert-container
+  - if flash.present?
+    - flash.each do |type, message|
+      .alert{ class: "alert-#{type}" }
+        %button.close{ 'data-dismiss' => 'alert' } ×
+        = message
+        - if flash[:link]
+          %br
+          link: #{link_to flash[:link], flash[:link]}

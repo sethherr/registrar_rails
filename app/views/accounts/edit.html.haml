@@ -1,0 +1,13 @@
+%h1.main-title-header
+  Edit your GlobaliD Registrar #{link_to "account", account_path}
+
+= form_for @user, url: { action: "update", controller: "accounts" } do |f|
+  - if @user.errors.any?
+    = render partial: "/shared/errors", locals: { name: nil, obj: @user }
+  .row
+    .col-6.col-lg-4
+      .form-group
+        = f.label :name
+        = f.text_field :name, class: "form-control"
+  .form-group
+    = f.submit "Update", class: "btn btn-primary"

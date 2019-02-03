@@ -1,0 +1,23 @@
+.navbar.admin-navbar.navbar-expand-md.navbar-dark.bg-dark
+  .container-fluid
+    %a.navbar-brand{ href: admin_root_url }
+      Registrar Admin
+    %button.navbar-toggler{ type: "button", "data-toggle" => "collapse", "data-target" => "#mainNavbarContent", "aria-controls" => "mainNavbarContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation" }
+      %span.navbar-toggler-icon
+
+    .collapse.navbar-collapse#mainNavbarContent
+      %ul.navbar-nav.mr-auto
+        %li.nav-item{ class: controller_name == "users" ? "active" : "" }
+          = link_to "Users", admin_users_path, class: "nav-link"
+        - if Rails.env.development?
+          %li.nav-item
+          = link_to "MailerPreview", "/rails/mailers/application_mailer", class: "nav-link", 'data-turbolinks' => false
+
+      %form.form-inline
+        .nav-item.dropdown
+          %a.override-link-color.nav-link.dropdown-toggle#mainNavbarUserDropdown{ href: "#", role: "button", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false" }
+            = current_user.display_name
+          .dropdown-menu{ "aria-labelledby" => "mainNavbarUserDropdown" }
+            = link_to "Your account", account_path, class: "dropdown-item"
+            = link_to "Edit account", edit_account_path, class: "dropdown-item", style: "opacity: 0.8;"
+            = link_to "log out", destroy_user_session_path, method: :delete, class: "dropdown-item less-strong"

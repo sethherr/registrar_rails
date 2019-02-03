@@ -1,0 +1,51 @@
+.admin-header
+  %h1
+    Users
+
+.mt-4
+
+= form_tag admin_users_path, method: "GET", class: "form-inline" do
+  .form-group{ style: "max-width: 100%; width: 30rem;" }
+    = text_field_tag :search_query, params[:search_query], placeholder: "Search email, name, etc.", class: "form-control", style: "width: 100%; margin-right: 1.5rem;"
+  .form-group
+    = submit_tag "Search", class: "btn btn-primary"
+  .form-group{ style: "margin-left: 1.5rem;" }
+    %label.form-check-label
+      = check_box_tag :admins, 1, @admins_only, class: "form-check-input"
+      &nbsp;Admins
+
+.row.mt-2
+  .col-lg-7.pagination-flex
+    = paginate @users
+    .pagination-number
+      = @users.total_count
+      matching users
+
+.mt-4.table-wrapper
+  %table.table.table-sm.table-bordered.table-striped
+    %thead.sortable
+      %th
+        = sortable "created_at", "Signed up"
+      %th
+        = sortable "email"
+      %th
+        = sortable "name"
+      %th
+        %small
+          Admin?
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td
+            %a.convertTime{ href: admin_user_path(user) }
+              = l user.created_at, format: :convert_time
+            %small
+              = link_to "edit", edit_admin_user_path(user), class: "gray-link em"
+          %td
+            = user.email
+          %td
+            = user.name
+          %td
+            - if user.admin?
+              %small
+                = user.admin_role.humanize

@@ -1,0 +1,54 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - "bin/**/*"
+    - "db/schema.rb"
+    - "db/migrate/**/*"
+    - "node_modules/**/*"
+    - "spec/*_helper.rb"
+    - "Guardfile"
+    - "documentation/*"
+    - "config/*"
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+Style/AndOr:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+# I'm a fan of defining convenience methods in single lines
+Style/SingleLineMethods:
+  Enabled: false
+
+ParameterLists:
+  CountKeywordArgs: false
+
+# https://anti-pattern.com/always-use-double-quoted-strings-in-ruby
+Style/StringLiterals:
+  EnforcedStyle: double_quotes # Always do it, lower cost cognitively
+
+NumericLiterals:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Exclude:
+    - "spec/**/*.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*.rb"
+
+Metrics/LineLength:
+  Enabled: false

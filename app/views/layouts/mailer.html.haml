@@ -1,0 +1,16 @@
+!!!
+%html
+  %head
+    %meta{ content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }
+    %title
+      = content_for?(:title) ? yield(:title) : "GlobaliD Registrar"
+    = stylesheet_link_tag "email" # We use premailer, which inlines our CSS for us
+  %body
+    .registrar-wrapper
+      .registrar-header
+        %h2
+          GlobaliD Registrar
+      .registrar-body
+        = yield
+      .registrar-footer
+        .nav-links

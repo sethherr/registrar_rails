@@ -1,0 +1,46 @@
+!!!
+%html
+  %head
+    %meta{ content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
+    %meta{ name:"viewport", content:"width=device-width, initial-scale=1, shrink-to-fit=no" }
+    %title #{page_title}
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_pack_tag "application_css", media: "all", "data-turbolinks-track": "reload"
+    = javascript_pack_tag "application", "data-turbolinks-track": "reload"
+  %body{ class: in_admin? ? "admin-body" : "", id: page_id, "data-pageaction" => action_name }
+    - if in_admin?
+      = render "/shared/admin_navbar"
+    - else
+      .navbar.primary-navbar.navbar-expand-md.navbar-light
+        .container-fluid
+          %a.navbar-brand{ href: root_url, title: "GlobaliD Registrar" }
+            Registrar
+          %button.navbar-toggler{ type: "button", "data-toggle" => "collapse", "data-target" => "#mainNavbarContent", "aria-controls" => "mainNavbarContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation" }
+            %span.navbar-toggler-icon
+          .collapse.navbar-collapse#mainNavbarContent
+            %ul.navbar-nav.ml-auto
+              - if current_user&.admin?
+                %li.nav-item.mr-auto
+                  = link_to "Admin", admin_root_path, class: "nav-link"
+              - if current_user.present?
+                .nav-item.dropdown
+                  %a.override-link-color.nav-link.dropdown-toggle#mainNavbarUserDropdown{ href: "#", role: "button", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false" }
+                    = current_user.display_name
+                  .dropdown-menu{ "aria-labelledby" => "mainNavbarUserDropdown" }
+                    = active_link "Your account", account_path, class: "dropdown-item"
+                    = active_link "Edit account", edit_account_path, class: "dropdown-item", style: "opacity: 0.8;"
+                    = active_link "log out", destroy_user_session_path, method: :delete, class: "dropdown-item less-strong"
+              - else
+                %li.nav-item
+                  = active_link "Sign up", new_user_registration_path, class: "nav-link"
+                %li.nav-item
+                  = active_link "Log in", new_user_session_path, class: "nav-link"
+
+    .mt-4.mb-4{ class: main_container_class }
+
+      = render "/shared/flash_messages"
+
+      = yield
+
+      = render "/shared/google_analytics"

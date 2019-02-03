@@ -1,0 +1,68 @@
+.admin-header
+  %h1
+    Info about #{@user.display_name}
+    %a.btn.btn-info{ href: edit_admin_user_path(@user) }
+      Edit
+
+- if @user.admin?
+  %p.text-success
+    User is
+    %strong
+      = @user.admin_role
+    - if @user.developer?
+      and a
+      %strong
+        developer
+
+- else
+  %p.less-strong
+    %em
+      User is not an employee
+
+.row.mt-4
+  .col-md-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Name
+          %td
+            = @user.name
+        %tr
+          %td
+            Email
+          %td
+            %a{ href: "mailto:#{@user.email}" }
+              = @user.email
+  .col-md-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Created
+          %td
+            %span.convertTime.preciseTime
+              = l @user.created_at, format: :convert_time
+        %tr
+          %td
+            Confirmed?
+          %td
+            = "&#x2713;".html_safe if @user.confirmed?
+        %tr
+          %td
+            Signed in
+          %td
+            - if @user.current_sign_in_at.present?
+              %span.convertTime.preciseTime
+                = l @user.current_sign_in_at, format: :convert_time
+              - if @user.current_sign_in_ip.present?
+                %em.small.less-strong
+                  at #{@user.current_sign_in_ip}
+            - else
+              \-
+        %tr
+          %td
+            Sign in count
+          %td
+            = @user.sign_in_count
+

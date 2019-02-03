@@ -1,0 +1,22 @@
+.admin-header,
+.admin-subheader {
+  @extend .mt-4;
+  @extend .mb-2;
+  @extend .clearfix;
+  .btn {
+    @extend .header-sublink;
+  }
+}
+.admin-header {
+  @extend .mb-4;
+}
+
+.header-link {
+  color: $text-color;
+  text-decoration: underline;
+}
+
+// Because we want it to break on small screens
+.header-sublink {
+  @extend .float-md-right;
+}
