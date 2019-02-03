@@ -29,7 +29,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
 
   # Fallback so the page doesn't break if the image isn't there
   def default_url
-    'https://files.bikeindex.org/blank.png'
+    "https://files.bikeindex.org/blank.png"
   end
 
   process :validate_dimensions

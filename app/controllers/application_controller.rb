@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -22,11 +24,11 @@ class ApplicationController < ActionController::Base
     after_sign_in_path_for(resource)
   end
 
-  def after_sign_out_path_for(resource)
+  def after_sign_out_path_for(_resource)
     root_url
   end
 
-  helper_method :user_root_path, :controller_namespace,
+  helper_method :user_root_path, :controller_namespace
 
   def user_root_path
     return root_url unless current_user.present?
