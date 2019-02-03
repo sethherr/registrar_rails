@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :omniauthable, :confirmable,
          :recoverable, :rememberable, :trackable, omniauth_providers: [:bike_index]
 
+  has_many :integrations
+
   enum admin_role: ADMIN_ROLE_ENUM
 
   validates :email, uniqueness: { case_sensitive: false }

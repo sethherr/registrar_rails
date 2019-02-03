@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :ensure_user!, raise: false
 
   def bike_index
