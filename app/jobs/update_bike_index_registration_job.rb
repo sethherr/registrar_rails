@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
-# This is a stub for now.
-# We'll want to make it send notifications to admins when shit goes wrong though
-# Once it happens and I get an error alert, I'll make it actually work
-class NotifyAdminsJob < ApplicationJob
-  VALID_KINDS = %w[]
-  def perform(kind, data = {})
-    raise "THIS WAS NEVER ACTUALLY SET UP TO SEND MAIL. #{kind} - #{data}"
+class UpdateBikeIndexRegistrationJob < ApplicationJob
+  def perform(bike_index_id)
+    external_registration = ExternalRegistration.lookup_external_id("bike_index", bike_index_id)
+    unless external_registration.present?
+      registration = Registration.create
+      external_registration = ExternalRegistration.create(registration: registration,
+                                                          provider: "bike_index",
+                                                          external_id: bike_index_id)
+    end
+    external_registration.external_data = BikeIndexIntegration.new.fetch_bike(bike_index_id)
+    external_registration.external_data_at = Time.now
+    external_registration.save
   end
 end

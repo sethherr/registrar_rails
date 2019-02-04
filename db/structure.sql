@@ -86,7 +86,8 @@ CREATE TABLE public.external_registrations (
     registration_id bigint,
     provider integer,
     external_id character varying,
-    data json,
+    external_data json,
+    external_data_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
