@@ -9,6 +9,8 @@
       %ul.navbar-nav.mr-auto
         %li.nav-item{ class: controller_name == "users" ? "active" : "" }
           = link_to "Users", admin_users_path, class: "nav-link"
+        %li.nav-item{ class: controller_name == "registrations" ? "active" : "" }
+          = link_to "Registrations", admin_registrations_path, class: "nav-link"
         - if Rails.env.development?
           %li.nav-item
           = link_to "MailerPreview", "/rails/mailers/application_mailer", class: "nav-link", 'data-turbolinks' => false
