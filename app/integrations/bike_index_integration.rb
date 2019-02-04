@@ -13,8 +13,8 @@ class BikeIndexIntegration
     end
   end
 
-  def fetch_bike(bike)
-    result = connection(PERMANENT_TOKEN).get("/api/v3/bikes/#{bike.bike_index_id}")
-    JSON.parse(result.body)
+  def fetch_bike(bike_index_id)
+    result = connection(PERMANENT_TOKEN).get("/api/v3/bikes/#{bike_index_id}")
+    JSON.parse(result.body)["bike"]
   end
 end
