@@ -113,11 +113,47 @@ ALTER SEQUENCE public.external_registrations_id_seq OWNED BY public.external_reg
 
 
 --
+-- Name: registration_images; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_images (
+    id bigint NOT NULL,
+    name character varying,
+    registration_id bigint,
+    internal_image text,
+    external_image json,
+    listing_order integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registration_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.registration_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registration_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.registration_images_id_seq OWNED BY public.registration_images.id;
+
+
+--
 -- Name: registrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.registrations (
     id bigint NOT NULL,
+    thumb_url character varying,
     description text,
     status integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
@@ -243,6 +279,13 @@ ALTER TABLE ONLY public.external_registrations ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: registration_images id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_images ALTER COLUMN id SET DEFAULT nextval('public.registration_images_id_seq'::regclass);
+
+
+--
 -- Name: registrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -277,6 +320,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.external_registrations
     ADD CONSTRAINT external_registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registration_images registration_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_images
+    ADD CONSTRAINT registration_images_pkey PRIMARY KEY (id);
 
 
 --
@@ -319,6 +370,13 @@ CREATE INDEX index_external_registrations_on_registration_id ON public.external_
 
 
 --
+-- Name: index_registration_images_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_images_on_registration_id ON public.registration_images USING btree (registration_id);
+
+
+--
 -- Name: index_user_integrations_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -350,6 +408,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190203031814'),
 ('20190203201834'),
 ('20190203230824'),
-('20190203232211');
+('20190203232211'),
+('20190204231506');
 
 

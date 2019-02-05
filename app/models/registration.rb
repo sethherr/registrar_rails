@@ -10,6 +10,7 @@ class Registration < ApplicationRecord
   }.freeze
 
   has_many :external_registrations
+  has_many :registration_images
 
   enum status: STATUS_ENUM
 
@@ -21,5 +22,6 @@ class Registration < ApplicationRecord
 
   def set_calculated_attributes
     self.status = external_registrations.first.status if external_registrations.any?
+    self.thumb_url = registration_images.listing_order.first&.image_url(:small)
   end
 end

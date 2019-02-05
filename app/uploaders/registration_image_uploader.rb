@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PhotoUploader < CarrierWave::Uploader::Base
+class RegistrationImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
   after :remove, :delete_empty_upstream_dirs
@@ -41,6 +41,6 @@ class PhotoUploader < CarrierWave::Uploader::Base
   end
 
   version :small do
-    process resize_to_fill: [150, 150]
+    process resize_to_fill: [300, 300]
   end
 end
