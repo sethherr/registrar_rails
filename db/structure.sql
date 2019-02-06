@@ -233,6 +233,7 @@ CREATE TABLE public.tags (
     slug character varying,
     main_category boolean,
     manufacturer boolean,
+    parent_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -500,6 +501,13 @@ CREATE INDEX index_registrations_on_main_category_id ON public.registrations USI
 --
 
 CREATE INDEX index_registrations_on_manufacturer_id ON public.registrations USING btree (manufacturer_id);
+
+
+--
+-- Name: index_tags_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_parent_id ON public.tags USING btree (parent_id);
 
 
 --

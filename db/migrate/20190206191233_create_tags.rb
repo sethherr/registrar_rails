@@ -5,6 +5,7 @@ class CreateTags < ActiveRecord::Migration[5.2]
       t.string :slug
       t.boolean :main_category
       t.boolean :manufacturer
+      t.references :parent
 
       t.timestamps
     end
