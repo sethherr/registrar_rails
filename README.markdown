@@ -1,4 +1,4 @@
-# Initial mockup of GlobaliD Registrar
+# Initial mockup of GlobaliD Registrar [![CircleCI](https://circleci.com/gh/sethherr/registrar_rails/tree/master.svg?style=svg)](https://circleci.com/gh/sethherr/registrar_rails/tree/master)
 
 #### Webpacker
 
