@@ -19,7 +19,7 @@ class ExternalRegistration < ApplicationRecord
   end
 
   def manufacturer_tag
-    return external_data["manufacturer_name"] if bike_index?
+    return external_data && external_data["manufacturer_name"] if bike_index?
   end
 
   def main_category_tag
