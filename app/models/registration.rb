@@ -25,6 +25,11 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
+  # Minor convenience
+  def main_category_name; main_category&.name end
+
+  def manufacturer_name; manufacturer&.name end
+
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)
   end

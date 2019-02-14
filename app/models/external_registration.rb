@@ -18,7 +18,17 @@ class ExternalRegistration < ApplicationRecord
     where(provider: provider, external_id: id.to_s.strip).first
   end
 
+  def manufacturer_tag
+    return external_data["manufacturer_name"] if bike_index?
+  end
+
+  def main_category_tag
+    return "Bicycle" if bike_index?
+  end
+
   def update_registration
+    registration.manufacturer_tag = manufacturer_tag if manufacturer_tag.present?
+    registration.main_category_tag = main_category_tag if main_category_tag.present?
     registration&.update_attributes(updated_at: Time.now)
   end
 

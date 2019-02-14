@@ -21,9 +21,11 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
       expect(registration.status).to eq "registered"
       expect(external_registration.external_data).to eq target_data
       expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
+      expect(registration.main_category_name).to eq "Bicycle"
+        expect(registration.manufacturer_name).to eq "Kona"
     end
     context "with existing external_registration" do
-      let(:registration) { FactoryBot.create(:registration, updated_at: og_time) }
+      let(:registration) { FactoryBot.create(:registration, manufacturer_tag: "KKONA", updated_at: og_time) }
       let(:external_registration) do
         FactoryBot.create(:external_registration_bike_index, external_data: {},
                                                              external_data_at: og_time,
@@ -41,7 +43,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
                                                external_image: external_image,
                                                registration: registration)
       end
-      it "adds the registration data we expect" do
+      it "adds the registration data we expect, overrides manufacturer_tag" do
         external_registration.reload
         expect(external_registration.external_data).to eq({})
         expect(external_registration.external_data_at).to be_within(1.seconds).of og_time
@@ -54,9 +56,12 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         expect(external_registration.external_data).to eq target_data
         expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
         expect(registration.updated_at).to be_within(1.seconds).of Time.now
+        expect(registration.status).to eq "registered"
         expect(registration.registration_images.pluck(:id)).to eq([registration_image.id])
         expect(registration_image.listing_order).to eq 0
         expect(registration.thumb_url).to eq "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
+        expect(registration.main_category_name).to eq "Bicycle"
+        expect(registration.manufacturer_name).to eq "Kona"
       end
     end
     context "stolen bike" do
