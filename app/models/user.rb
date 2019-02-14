@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, omniauth_providers: [:bike_index]
 
   has_many :user_integrations
+  has_many :attestations
+  has_many :ownerships
+  has_many :registrations, through: :ownerships
+  has_many :current_ownerships, -> { current }, class_name: "Ownership"
+  has_many :current_registrations, through: :current_ownerships, source: :registration
 
   enum admin_role: ADMIN_ROLE_ENUM
 

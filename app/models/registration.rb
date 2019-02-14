@@ -15,6 +15,8 @@ class Registration < ApplicationRecord
   has_many :registration_images
   has_many :registration_tags
   has_many :tags, through: :registration_tags
+  has_many :ownerships
+  has_many :attestations
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
 
   enum status: STATUS_ENUM
@@ -24,6 +26,10 @@ class Registration < ApplicationRecord
   def self.lookup_external_id(provider, id)
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
+
+  def current_ownership; ownerships.current.reorder(:created_at).last end
+
+  def current_owner; current_ownership&.user end
 
   # Minor convenience
   def main_category_tag; main_category&.name end

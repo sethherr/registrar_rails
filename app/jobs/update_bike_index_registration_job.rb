@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UpdateBikeIndexRegistrationJob < ApplicationJob
-  def perform(bike_index_id)
+  def perform(bike_index_id, user_id = nil)
     external_registration = ExternalRegistration.lookup_external_id("bike_index", bike_index_id)
     unless external_registration.present?
       external_registration = ExternalRegistration.create(registration: Registration.create,
@@ -11,8 +11,16 @@ class UpdateBikeIndexRegistrationJob < ApplicationJob
     external_registration.external_data = BikeIndexIntegration.new.fetch_bike(bike_index_id)
     external_registration.external_data_at = Time.now
     external_registration.save
+    update_registration_ownership(external_registration.registration, user_id)
     create_missing_photos(external_registration.registration,
                           external_registration.external_data["public_images"])
+  end
+
+  def update_registration_ownership(registration, user_id)
+    user = user_id.present? && User.where(id: user_id).first
+    return true if user.blank?
+    return true if registration.current_owner == user
+    Ownership.create_for(registration, creator: "bike_index", owner: user)
   end
 
   def create_missing_photos(registration, public_images)

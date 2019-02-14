@@ -2,5 +2,6 @@
 
 FactoryBot.define do
   factory :registration do
+    status { "registered" }
   end
 end
