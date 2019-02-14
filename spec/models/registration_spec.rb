@@ -30,6 +30,7 @@ RSpec.describe Registration, type: :model do
         expect(tag_main.main_category?).to be_truthy
         expect(tag.manufacturer?).to be_falsey
         registration.reload
+        expect(registration.uuid).to be_present
         expect(registration.tags.count).to eq 3
         expect(registration.manufacturer_id).to eq tag.id
         expect(registration.main_category_id).to eq tag_main.id

@@ -1,0 +1,34 @@
+.admin-header
+  %h1
+    = @registration.title
+
+%p
+  = @registration.description
+
+.row.mt-4
+  .col-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Main Category
+          %td
+            = @registration.main_category_tag
+        - unless @registration.hide_manufacturer?
+          %tr
+            %td
+              Manufacturer
+            %td
+              = @registration.manufacturer_tag
+        %tr
+          %td
+            Tags
+          %td
+            = @registration.tags_list.join(", ")
+  .col-6
+    .registration-images
+      .row
+        - @registration.registration_images.each do |image|
+          .col-4
+            = link_to image.image_url do
+              = image_tag(image.image_url(:small))

@@ -7,19 +7,22 @@
 - @registration.external_registrations.each do |external_registration|
   %p
     Registration data from #{external_registration.provider} - updated
-    %span.convertTime
-      = l external_registration.external_data_at, format: :convert_time
-  %pre{ style: "height: auto;" }
-    %code{ style: "overflow-y: visible;" }
-      - (external_registration.external_data || {}).each do |k, v|
-        - if v.is_a?(Hash) # We want to pretty print the subvalues too
-          #{k}:
-          %br
-          - v.each do |subk, subv|
-            #{subk}:
-            = subv
+    - if external_registration.external_data_at.present?
+      %span.convertTime
+        = l external_registration.external_data_at, format: :convert_time
+
+  - if external_registration.external_data.present? && external_registration.external_data.is_a?(Hash)
+    %pre{ style: "height: auto;" }
+      %code{ style: "overflow-y: visible;" }
+        - external_registration.external_data.each do |k, v|
+          - if v.is_a?(Hash) # We want to pretty print the subvalues too
+            #{k}:
             %br
-        - else
-          #{k}:
-          = v
-        %br
+            - v.each do |subk, subv|
+              #{subk}:
+              = subv
+              %br
+          - else
+            #{k}:
+            = v
+          %br

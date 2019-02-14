@@ -11,10 +11,13 @@ class Registration < ApplicationRecord
 
   belongs_to :main_category, class_name: "Tag"
   belongs_to :manufacturer, class_name: "Tag"
+  belongs_to :current_owner, class_name: "User"
   has_many :external_registrations
   has_many :registration_images
   has_many :registration_tags
   has_many :tags, through: :registration_tags
+  has_many :ownerships
+  has_many :attestations
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
 
   enum status: STATUS_ENUM
@@ -25,10 +28,24 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
-  # Minor convenience
+  # Lol, just finding by uuid for now
+  def self.friendly_find(id_or_uuid)
+    Registration.find_by_uuid(id_or_uuid)
+  end
+
+  def to_param; uuid end
+
+  def current_ownership; ownerships.current.reorder(:id).last end
+
+  def current_owner_calculated; current_ownership&.user end
+
   def main_category_tag; main_category&.name end
 
   def manufacturer_tag; manufacturer&.name end
+
+  def tags_list; tags.pluck(:name) end
+
+  def hide_manufacturer?; main_category == "Pet" end
 
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)
@@ -50,5 +67,7 @@ class Registration < ApplicationRecord
     # Use registration tags here because they haven't been assigned yet. Laborious n+1 search because nothing else works
     self.manufacturer_id ||= registration_tags.select { |rt| rt.tag.manufacturer? }.first&.tag_id
     self.main_category_id ||= registration_tags.select { |rt| rt.tag.main_category? }.first&.tag_id
+    current_owner_calculated_id = current_owner_calculated&.id
+    self.current_owner_id = current_owner_calculated_id if current_owner_id != current_owner_calculated_id
   end
 end

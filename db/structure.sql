@@ -51,6 +51,20 @@ COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
 
 
 --
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
 -- Name: pg_search_dmetaphone(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -75,6 +89,41 @@ CREATE TABLE public.ar_internal_metadata (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: attestations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attestations (
+    id bigint NOT NULL,
+    registration_id bigint,
+    user_id bigint,
+    ownership_id bigint,
+    kind integer,
+    authorizer integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: attestations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.attestations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attestations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.attestations_id_seq OWNED BY public.attestations.id;
 
 
 --
@@ -110,6 +159,40 @@ CREATE SEQUENCE public.external_registrations_id_seq
 --
 
 ALTER SEQUENCE public.external_registrations_id_seq OWNED BY public.external_registrations.id;
+
+
+--
+-- Name: ownerships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ownerships (
+    id bigint NOT NULL,
+    registration_id bigint,
+    user_id bigint,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: ownerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ownerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ownerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ownerships_id_seq OWNED BY public.ownerships.id;
 
 
 --
@@ -192,7 +275,9 @@ CREATE TABLE public.registrations (
     manufacturer_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title character varying
+    title character varying,
+    current_owner_id bigint,
+    uuid uuid DEFAULT public.uuid_generate_v4()
 );
 
 
@@ -342,10 +427,24 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: attestations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attestations ALTER COLUMN id SET DEFAULT nextval('public.attestations_id_seq'::regclass);
+
+
+--
 -- Name: external_registrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_registrations ALTER COLUMN id SET DEFAULT nextval('public.external_registrations_id_seq'::regclass);
+
+
+--
+-- Name: ownerships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ownerships ALTER COLUMN id SET DEFAULT nextval('public.ownerships_id_seq'::regclass);
 
 
 --
@@ -399,11 +498,27 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: attestations attestations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attestations
+    ADD CONSTRAINT attestations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: external_registrations external_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_registrations
     ADD CONSTRAINT external_registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ownerships ownerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ownerships
+    ADD CONSTRAINT ownerships_pkey PRIMARY KEY (id);
 
 
 --
@@ -463,10 +578,45 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_attestations_on_ownership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attestations_on_ownership_id ON public.attestations USING btree (ownership_id);
+
+
+--
+-- Name: index_attestations_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attestations_on_registration_id ON public.attestations USING btree (registration_id);
+
+
+--
+-- Name: index_attestations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attestations_on_user_id ON public.attestations USING btree (user_id);
+
+
+--
 -- Name: index_external_registrations_on_registration_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_external_registrations_on_registration_id ON public.external_registrations USING btree (registration_id);
+
+
+--
+-- Name: index_ownerships_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ownerships_on_registration_id ON public.ownerships USING btree (registration_id);
+
+
+--
+-- Name: index_ownerships_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ownerships_on_user_id ON public.ownerships USING btree (user_id);
 
 
 --
@@ -488,6 +638,13 @@ CREATE INDEX index_registration_tags_on_registration_id ON public.registration_t
 --
 
 CREATE INDEX index_registration_tags_on_tag_id ON public.registration_tags USING btree (tag_id);
+
+
+--
+-- Name: index_registrations_on_current_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrations_on_current_owner_id ON public.registrations USING btree (current_owner_id);
 
 
 --
@@ -547,6 +704,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190204231506'),
 ('20190206191233'),
 ('20190206191609'),
-('20190214180052');
+('20190214180052'),
+('20190214182953'),
+('20190214183813'),
+('20190214200816'),
+('20190214214716'),
+('20190214214825');
 
 

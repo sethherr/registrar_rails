@@ -2,14 +2,6 @@
   %h1
     Registrations
 
-.mt-4
-
-/ = form_tag admin_registrations_path, method: "GET", class: "form-inline" do
-/   .form-group{ style: "max-width: 100%; width: 30rem;" }
-/     = text_field_tag :search_query, params[:search_query], placeholder: "Search email, name, etc.", class: "form-control", style: "width: 100%; margin-right: 1.5rem;"
-/   .form-group
-/     = submit_tag "Search", class: "btn btn-primary"
-
 .row.mt-2
   .col-lg-7.pagination-flex
     = paginate @registrations
@@ -21,17 +13,13 @@
   %table.table.table-sm.table-bordered.table-striped
     %thead.sortable
       %th
-        = sortable "created_at"
+        Registered at
       %th
-        = sortable "status"
+        status
       %th
         Title
       %th
-        = sortable "manufacturer_id"
-      %th
-        = sortable "main_category_id"
-      %th
-        = sortable "user_id"
+        Main Category
     %tbody
       - @registrations.each do |registration|
         %tr
@@ -43,8 +31,4 @@
           %td
             = registration.title
           %td
-            = registration.manufacturer_tag
-          %td
             = registration.main_category_tag
-          %td
-            = registration.current_owner&.display_name

@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, omniauth_providers: [:bike_index]
 
   has_many :user_integrations
+  has_many :attestations
+  has_many :ownerships
+  has_many :registrations, through: :ownerships
+  has_many :current_ownerships, -> { current }, class_name: "Ownership"
+  has_many :current_registrations, class_name: "Registration", foreign_key: "current_owner_id"
 
   enum admin_role: ADMIN_ROLE_ENUM
 
@@ -63,7 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def update_external_registrations
-    bike_index_bike_ids.each { |i| UpdateBikeIndexRegistrationJob.perform_async(i) }
+    bike_index_bike_ids.each { |i| UpdateBikeIndexRegistrationJob.perform_async(i, id) }
   end
 
   private

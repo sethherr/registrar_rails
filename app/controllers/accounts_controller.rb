@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
 
   def show
     @page_title = "GlobaliD Registrar Account"
-    @registrations = []
+    @registrations = current_user.current_registrations
   end
 
   def edit; end
@@ -21,15 +21,6 @@ class AccountsController < ApplicationController
   end
 
   private
-
-  def redirect_to_signup_unless_user_present!
-    if current_user.present?
-      @user = current_user
-      return true
-    end
-    redirect_to new_user_session_path
-    return
-  end
 
   def permitted_params
     params.require(:user).permit(:name)
