@@ -11,6 +11,7 @@ class Registration < ApplicationRecord
 
   belongs_to :main_category, class_name: "Tag"
   belongs_to :manufacturer, class_name: "Tag"
+  belongs_to :current_owner, class_name: "User"
   has_many :external_registrations
   has_many :registration_images
   has_many :registration_tags
@@ -27,9 +28,9 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
-  def current_ownership; ownerships.current.reorder(:created_at).last end
+  def current_ownership; ownerships.current.reorder(:id).last end
 
-  def current_owner; current_ownership&.user end
+  def current_owner_calculated; current_ownership&.user end
 
   # Minor convenience
   def main_category_tag; main_category&.name end
@@ -56,5 +57,7 @@ class Registration < ApplicationRecord
     # Use registration tags here because they haven't been assigned yet. Laborious n+1 search because nothing else works
     self.manufacturer_id ||= registration_tags.select { |rt| rt.tag.manufacturer? }.first&.tag_id
     self.main_category_id ||= registration_tags.select { |rt| rt.tag.main_category? }.first&.tag_id
+    current_owner_calculated_id = current_owner_calculated&.id
+    self.current_owner_id = current_owner_calculated_id if current_owner_id != current_owner_calculated_id
   end
 end

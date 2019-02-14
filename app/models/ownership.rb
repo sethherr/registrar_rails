@@ -8,6 +8,8 @@ class Ownership < ApplicationRecord
   scope :current, -> { where.not(started_at: nil).where(ended_at: nil) }
   scope :previous, -> { where.not(ended_at: nil) }
 
+  after_commit :update_registration
+
   def self.create_for(registration, creator:, owner:)
     previous_ownership = registration.current_ownership
     ownership = create(registration: registration,
@@ -39,5 +41,9 @@ class Ownership < ApplicationRecord
   # Eventually, we may want to add an attestation here too
   def mark_no_longer_current
     update_attributes(ended_at: Time.now)
+  end
+
+  def update_registration
+    registration&.update_attributes(updated_at: Time.now)
   end
 end

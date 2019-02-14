@@ -56,6 +56,7 @@ RSpec.describe Ownership, type: :model do
         registration.reload
         user.reload
         expect(registration.current_owner).to eq user
+        expect(registration.current_owner_calculated).to eq user
         expect(user.registrations.pluck(:id)).to eq([registration.id])
         expect(user.current_registrations).to eq([registration])
         expect(ownership.user).to eq user

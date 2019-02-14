@@ -261,7 +261,8 @@ CREATE TABLE public.registrations (
     manufacturer_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title character varying
+    title character varying,
+    current_owner_id bigint
 );
 
 
@@ -625,6 +626,13 @@ CREATE INDEX index_registration_tags_on_tag_id ON public.registration_tags USING
 
 
 --
+-- Name: index_registrations_on_current_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrations_on_current_owner_id ON public.registrations USING btree (current_owner_id);
+
+
+--
 -- Name: index_registrations_on_main_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -683,6 +691,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190206191609'),
 ('20190214180052'),
 ('20190214182953'),
-('20190214183813');
+('20190214183813'),
+('20190214200816');
 
 

@@ -24,6 +24,8 @@
         = sortable "created_at"
       %th
         = sortable "status"
+      %th
+        User
     %tbody
       - @registrations.each do |registration|
         %tr
@@ -32,3 +34,5 @@
               = l registration.created_at, format: :convert_time
           %td
             = registration.status
+          %td
+            = registration.current_owner&.display_name

@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def update_external_registrations
-    bike_index_bike_ids.each { |i| UpdateBikeIndexRegistrationJob.perform_async(i) }
+    bike_index_bike_ids.each { |i| UpdateBikeIndexRegistrationJob.perform_async(i, id) }
   end
 
   private

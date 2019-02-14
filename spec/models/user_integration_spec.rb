@@ -82,7 +82,7 @@ RSpec.describe UserIntegration, type: :model do
 
       describe "existing user" do
         let!(:user) { User.create(email: "seth@bikeindex.orgd", name: " ", password: "partypass1111") }
-        let(:target_job_ids) { [6, 32, 35] }
+        let(:target_job_ids) { [[6, user.id], [32, user.id], [35, user.id]] }
         it "updates name, not password" do
           Sidekiq::Worker.clear_all
           expect(user.confirmed?).to be_falsey
@@ -100,7 +100,7 @@ RSpec.describe UserIntegration, type: :model do
           expect(user_integration.provider).to eq "bike_index"
           expect(user_integration.auth_hash).to eq auth_hash.as_json
           # Check that we successfully enqueue update_bike_index_registration_job
-          expect(UpdateBikeIndexRegistrationJob.jobs.map { |j| j["args"] }.flatten).to match_array target_job_ids
+          expect(UpdateBikeIndexRegistrationJob.jobs.map { |j| j["args"] }).to match_array target_job_ids
         end
       end
     end
