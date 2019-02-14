@@ -10,7 +10,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
                                                request.env["omniauth.auth"])
     if @user.persisted?
       sign_in_and_redirect @user
-      flash[:success] = "Logged in with Bike Index" if is_navigational_format?
+      flash[:success] = "Authorized Bike Index" if is_navigational_format?
     else
       flash[:error] = "We're sorry, we failed to sign you in. Please contact support@globalidregistrar.net"
       redirect_to root_url
