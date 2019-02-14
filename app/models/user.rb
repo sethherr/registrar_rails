@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :ownerships
   has_many :registrations, through: :ownerships
   has_many :current_ownerships, -> { current }, class_name: "Ownership"
-  has_many :current_registrations, through: :current_ownerships, source: :registration
+  has_many :current_registrations, class_name: "Registration", foreign_key: "current_owner_id"
 
   enum admin_role: ADMIN_ROLE_ENUM
 
