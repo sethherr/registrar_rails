@@ -22,6 +22,7 @@ class RegistrationsController < ApplicationController
     @registration = Registration.new(permitted_params)
     if @registration.save
       Ownership.create_for(@registration, creator: current_user, owner: current_user)
+      @registration.reload
       flash[:success] = "Created new registration"
       redirect_to registration_path(@registration.to_param)
     else
@@ -37,7 +38,7 @@ class RegistrationsController < ApplicationController
   end
 
   def find_registration
-    @registration ||= Registration.find(params[:id])
+    @registration ||= Registration.friendly_find(params[:id])
   end
 
   def authorize_registration_for_user!

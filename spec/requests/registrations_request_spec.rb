@@ -35,6 +35,7 @@ RSpec.describe "/registrations", type: :request do
 
     describe "show" do
       it "renders" do
+        registration.reload
         get "/registrations/#{registration.to_param}"
         expect(response.code).to eq "200"
         expect(response).to render_template("registrations/show")
@@ -42,6 +43,7 @@ RSpec.describe "/registrations", type: :request do
       context "not users registration" do
         let(:registration) { FactoryBot.create(:registration_with_owner) }
         it "renders" do
+          registration.reload
           get "/registrations/#{registration.to_param}"
           expect(response.code).to eq "200"
           expect(response).to render_template("registrations/show")
