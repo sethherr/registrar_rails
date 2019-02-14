@@ -28,7 +28,7 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
-  def to_param; id end
+  def to_param; uuid end
 
   def current_ownership; ownerships.current.reorder(:id).last end
 

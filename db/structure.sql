@@ -51,6 +51,20 @@ COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
 
 
 --
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
 -- Name: pg_search_dmetaphone(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -262,7 +276,8 @@ CREATE TABLE public.registrations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     title character varying,
-    current_owner_id bigint
+    current_owner_id bigint,
+    uuid uuid DEFAULT public.uuid_generate_v4()
 );
 
 
@@ -692,6 +707,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190214180052'),
 ('20190214182953'),
 ('20190214183813'),
-('20190214200816');
+('20190214200816'),
+('20190214214716'),
+('20190214214825');
 
 

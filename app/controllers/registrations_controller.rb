@@ -14,9 +14,6 @@ class RegistrationsController < ApplicationController
   def show
   end
 
-  def edit
-  end
-
   def new
     @registration ||= Registration.new
   end
@@ -31,16 +28,6 @@ class RegistrationsController < ApplicationController
       flash[:error] = "Unable to create registration"
       render :new
     end
-  end
-
-  def update
-    # @user.attributes = permitted_params
-    # if @user.errors.blank? && @user.save
-    #   flash[:success] = "Updated account successfully"
-    #   redirect_to account_path
-    # else
-    #   render :edit
-    # end
   end
 
   private
