@@ -22,7 +22,15 @@ class RegistrationsController < ApplicationController
   end
 
   def create
-    
+    @registration = Registration.new(permitted_params)
+    if @registration.save
+      Ownership.create_for(@registration, creator: current_user, owner: current_user)
+      flash[:success] = "Created new registration"
+      redirect_to registration_path(@registration.to_param)
+    else
+      flash[:error] = "Unable to create registration"
+      render :new
+    end
   end
 
   def update
@@ -38,7 +46,7 @@ class RegistrationsController < ApplicationController
   private
 
   def permitted_params
-    params.require(:user).permit(:name)
+    params.require(:registration).permit(:title, :description, :main_category_tag, :manufacturer_tag, :tags_list)
   end
 
   def find_registration

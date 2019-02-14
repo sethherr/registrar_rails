@@ -9,13 +9,13 @@
         = f.text_field :title, class: "form-control"
     .col-sm-6
       .form-group
-        = f.label :main_category_id
-        = f.collection_select :main_category_id, Tag.main_category, :slug, :name, {}, { class: "form-control" }
+        = f.label :main_category_tag, "Main category"
+        = f.collection_select :main_category_tag, Tag.main_category, :slug, :name, { include_blank: true, prompt: "Choose category" }, { class: "form-control" }
   .row
     .col-sm-4
       .form-group
-        = f.label :manufacturer_id
-        = f.collection_select :manufacturer_id, Tag.manufacturer, :slug, :name, {}, { class: "form-control" }
+        = f.label :manufacturer_tag, "Manufacturer"
+        = f.text_field :manufacturer_tag, class: "form-control"
     .col-sm-8
       .form-group
         = f.label :tags_list

@@ -40,6 +40,8 @@ class Registration < ApplicationRecord
 
   def tags_list; tags.pluck(:name) end
 
+  def hide_manufacturer?; main_category == "Pet" end
+
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)
   end
