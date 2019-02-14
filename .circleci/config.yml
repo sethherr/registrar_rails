@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Setup Database
           command: |
-            bundle exec rails db:create db:schema:load
+            bundle exec rake db:setup db:structure:load
       - run:
           name: Run tests
           command: |
