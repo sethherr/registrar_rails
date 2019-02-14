@@ -23,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 04 Feb 2019 21:23:43 GMT
+      - Thu, 14 Feb 2019 18:22:40 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -31,20 +31,20 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cfduid=d0a7cdb8d5356b8076371ddafbbbaa2721549315422; expires=Tue, 04-Feb-20
-        21:23:42 GMT; path=/; domain=.bikeindex.org; HttpOnly
+      - __cfduid=de7e6cf84a6d63d55f0abb66acc710f6b1550168560; expires=Fri, 14-Feb-20
+        18:22:40 GMT; path=/; domain=.bikeindex.org; HttpOnly
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Request-Method:
       - "*"
       Etag:
-      - W/"64fcc349f1537b122c7d6915919e9dd8"
+      - W/"2a99acdad92c47b5cb1f84aab48ab0ea"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 6e537304-fd0d-4613-87be-7029f0113142
+      - 88fcbb33-8b1d-4826-b4d1-ed54c6b806e6
       X-Runtime:
-      - '0.045756'
+      - '0.046601'
       Strict-Transport-Security:
       - max-age=31536000
       X-Powered-By:
@@ -54,12 +54,16 @@ http_interactions:
       Server:
       - cloudflare
       Cf-Ray:
-      - 4a403331a8916bec-SJC
+      - 4a918fbcde4b6bec-SJC
     body:
       encoding: ASCII-8BIT
       string: '{"bike":{"id":432199,"title":"2018 Kona Big honzo st","serial":"f98bl2198","manufacturer_name":"Kona","frame_model":"Big
-        honzo st","year":2018,"frame_colors":["Blue"],"thumb":"https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg","large_img":"https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg","is_stock_img":false,"stolen":false,"stolen_location":null,"date_stolen":null,"registration_created_at":1538234514,"registration_updated_at":1538234588,"url":"https://bikeindex.org/bikes/432199","api_url":"https://bikeindex.org/api/v1/bikes/432199","manufacturer_id":203,"paint_description":null,"name":null,"frame_size":null,"description":null,"rear_tire_narrow":true,"front_tire_narrow":null,"type_of_cycle":"Bike","test_bike":false,"rear_wheel_size_iso_bsd":null,"front_wheel_size_iso_bsd":null,"handlebar_type_slug":null,"frame_material_slug":null,"front_gear_type_slug":null,"rear_gear_type_slug":null,"stolen_record":null,"public_images":[{"name":"2018
-        Kona Big honzo st Blue","full":"https://files.bikeindex.org/uploads/Pu/136859/image.jpg","large":"https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg","medium":"https://files.bikeindex.org/uploads/Pu/136859/medium_image.jpg","thumb":"https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"}],"components":[]}}'
+        honzo st","year":2018,"frame_colors":["Blue"],"thumb":"https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG","large_img":"https://files.bikeindex.org/uploads/Pu/147262/large_IMG_3970.JPG","is_stock_img":false,"stolen":false,"stolen_location":null,"date_stolen":null,"registration_created_at":1538234514,"registration_updated_at":1550168112,"url":"https://bikeindex.org/bikes/432199","api_url":"https://bikeindex.org/api/v1/bikes/432199","manufacturer_id":203,"paint_description":null,"name":"","frame_size":"","description":"My
+        favorite mountain bike. I put holes in everything","rear_tire_narrow":true,"front_tire_narrow":null,"type_of_cycle":"Bike","test_bike":false,"rear_wheel_size_iso_bsd":null,"front_wheel_size_iso_bsd":null,"handlebar_type_slug":null,"frame_material_slug":null,"front_gear_type_slug":null,"rear_gear_type_slug":null,"stolen_record":null,"public_images":[{"name":"2018
+        Kona Big honzo st Blue","full":"https://files.bikeindex.org/uploads/Pu/147262/IMG_3970.JPG","large":"https://files.bikeindex.org/uploads/Pu/147262/large_IMG_3970.JPG","medium":"https://files.bikeindex.org/uploads/Pu/147262/medium_IMG_3970.JPG","thumb":"https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG"},{"name":"2018
+        Kona Big honzo st Blue","full":"https://files.bikeindex.org/uploads/Pu/136859/image.jpg","large":"https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg","medium":"https://files.bikeindex.org/uploads/Pu/136859/medium_image.jpg","thumb":"https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"},{"name":"2018
+        Kona Big honzo st Blue","full":"https://files.bikeindex.org/uploads/Pu/147263/IMG_3955.JPG","large":"https://files.bikeindex.org/uploads/Pu/147263/large_IMG_3955.JPG","medium":"https://files.bikeindex.org/uploads/Pu/147263/medium_IMG_3955.JPG","thumb":"https://files.bikeindex.org/uploads/Pu/147263/small_IMG_3955.JPG"},{"name":"2018
+        Kona Big honzo st Blue","full":"https://files.bikeindex.org/uploads/Pu/147261/IMG_4006.JPG","large":"https://files.bikeindex.org/uploads/Pu/147261/large_IMG_4006.JPG","medium":"https://files.bikeindex.org/uploads/Pu/147261/medium_IMG_4006.JPG","thumb":"https://files.bikeindex.org/uploads/Pu/147261/small_IMG_4006.JPG"}],"components":[]}}'
     http_version: 
-  recorded_at: Mon, 04 Feb 2019 21:23:43 GMT
+  recorded_at: Thu, 14 Feb 2019 18:22:40 GMT
 recorded_with: VCR 4.0.0

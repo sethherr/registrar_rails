@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   resource :account, only: %i[show edit update]
 
+  resources :registrations
+
   resources :documentation, only: [:index] do
     collection do
       get :api_v1

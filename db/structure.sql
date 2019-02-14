@@ -191,7 +191,8 @@ CREATE TABLE public.registrations (
     main_category_id bigint,
     manufacturer_id bigint,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    title character varying
 );
 
 
@@ -545,6 +546,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190203232211'),
 ('20190204231506'),
 ('20190206191233'),
-('20190206191609');
+('20190206191609'),
+('20190214180052');
 
 

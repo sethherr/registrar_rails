@@ -26,9 +26,19 @@ class ExternalRegistration < ApplicationRecord
     return "Bicycle" if bike_index?
   end
 
+  def title
+    return external_data && external_data["title"] if bike_index?
+  end
+
+  def description
+    return external_data && external_data["description"] if bike_index?
+  end
+
   def update_registration
-    registration.manufacturer_tag = manufacturer_tag if manufacturer_tag.present?
-    registration.main_category_tag = main_category_tag if main_category_tag.present?
+    registration.manufacturer_tag ||= manufacturer_tag if manufacturer_tag.present?
+    registration.main_category_tag ||= main_category_tag if main_category_tag.present?
+    registration.title ||= title if title.present?
+    registration.description ||= description if description.present?
     registration&.update_attributes(updated_at: Time.now)
   end
 
