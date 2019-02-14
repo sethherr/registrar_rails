@@ -10,6 +10,8 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
     let(:og_time) { Time.now - 4.days }
     let(:external_id) { "432199" }
     let(:target_data) { JSON.parse(File.read(Rails.root.join("spec", "fixtures", "bike_index_kona.json"))) }
+    let(:og_description) { "My favorite mountain bike. I put holes in everything" }
+
     it "creates the registration and adds the info we expect" do
       VCR.use_cassette("update_bike_index_registration_job-fetch_kona") do
         expect do
@@ -21,11 +23,18 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
       expect(registration.status).to eq "registered"
       expect(external_registration.external_data).to eq target_data
       expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
-      expect(registration.main_category_name).to eq "Bicycle"
-        expect(registration.manufacturer_name).to eq "Kona"
+      expect(registration.main_category_tag).to eq "Bicycle"
+      expect(registration.manufacturer_tag).to eq "Kona"
+      expect(registration.description).to eq "My favorite mountain bike. I put holes in everything"
+      expect(registration.title).to eq "2018 Kona Big honzo st"
     end
     context "with existing external_registration" do
-      let(:registration) { FactoryBot.create(:registration, manufacturer_tag: "KKONA", updated_at: og_time) }
+      let(:registration) do
+        FactoryBot.create(:registration, manufacturer_tag: "KKONA",
+                                         updated_at: og_time,
+                                         description: "Some cool other thing",
+                                         title: "party party party")
+      end
       let(:external_registration) do
         FactoryBot.create(:external_registration_bike_index, external_data: {},
                                                              external_data_at: og_time,
@@ -47,7 +56,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         external_registration.reload
         expect(external_registration.external_data).to eq({})
         expect(external_registration.external_data_at).to be_within(1.seconds).of og_time
-        expect(registration.registration_images.pluck(:id)).to eq([registration_image.id])
+        expect(registration.registration_images.pluck(:id).include?(registration_image.id)).to be_truthy
         VCR.use_cassette("update_bike_index_registration_job-fetch_kona") do
           instance.perform(external_id)
         end
@@ -57,11 +66,14 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
         expect(registration.updated_at).to be_within(1.seconds).of Time.now
         expect(registration.status).to eq "registered"
-        expect(registration.registration_images.pluck(:id)).to eq([registration_image.id])
+        expect(registration.registration_images.pluck(:id).include?(registration_image.id)).to be_truthy
+        expect(registration.registration_images.count).to eq 4
         expect(registration_image.listing_order).to eq 0
         expect(registration.thumb_url).to eq "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
-        expect(registration.main_category_name).to eq "Bicycle"
-        expect(registration.manufacturer_name).to eq "Kona"
+        expect(registration.main_category_tag).to eq "Bicycle"
+        expect(registration.manufacturer_tag).to eq "KKONA"
+        expect(registration.description).to eq "Some cool other thing"
+        expect(registration.title).to eq "party party party"
       end
     end
     context "stolen bike" do

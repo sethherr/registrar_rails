@@ -26,9 +26,9 @@ class Registration < ApplicationRecord
   end
 
   # Minor convenience
-  def main_category_name; main_category&.name end
+  def main_category_tag; main_category&.name end
 
-  def manufacturer_name; manufacturer&.name end
+  def manufacturer_tag; manufacturer&.name end
 
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)

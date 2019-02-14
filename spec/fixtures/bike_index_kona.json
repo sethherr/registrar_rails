@@ -8,21 +8,21 @@
   "frame_colors": [
     "Blue"
   ],
-  "thumb": "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg",
-  "large_img": "https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg",
+  "thumb": "https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG",
+  "large_img": "https://files.bikeindex.org/uploads/Pu/147262/large_IMG_3970.JPG",
   "is_stock_img": false,
   "stolen": false,
   "stolen_location": null,
   "date_stolen": null,
   "registration_created_at": 1538234514,
-  "registration_updated_at": 1538234588,
+  "registration_updated_at": 1550168112,
   "url": "https://bikeindex.org/bikes/432199",
   "api_url": "https://bikeindex.org/api/v1/bikes/432199",
   "manufacturer_id": 203,
   "paint_description": null,
-  "name": null,
-  "frame_size": null,
-  "description": null,
+  "name": "",
+  "frame_size": "",
+  "description": "My favorite mountain bike. I put holes in everything",
   "rear_tire_narrow": true,
   "front_tire_narrow": null,
   "type_of_cycle": "Bike",
@@ -37,10 +37,31 @@
   "public_images": [
     {
       "name": "2018 Kona Big honzo st Blue",
+      "full": "https://files.bikeindex.org/uploads/Pu/147262/IMG_3970.JPG",
+      "large": "https://files.bikeindex.org/uploads/Pu/147262/large_IMG_3970.JPG",
+      "medium": "https://files.bikeindex.org/uploads/Pu/147262/medium_IMG_3970.JPG",
+      "thumb": "https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG"
+    },
+    {
+      "name": "2018 Kona Big honzo st Blue",
       "full": "https://files.bikeindex.org/uploads/Pu/136859/image.jpg",
       "large": "https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg",
       "medium": "https://files.bikeindex.org/uploads/Pu/136859/medium_image.jpg",
       "thumb": "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
+    },
+    {
+      "name": "2018 Kona Big honzo st Blue",
+      "full": "https://files.bikeindex.org/uploads/Pu/147263/IMG_3955.JPG",
+      "large": "https://files.bikeindex.org/uploads/Pu/147263/large_IMG_3955.JPG",
+      "medium": "https://files.bikeindex.org/uploads/Pu/147263/medium_IMG_3955.JPG",
+      "thumb": "https://files.bikeindex.org/uploads/Pu/147263/small_IMG_3955.JPG"
+    },
+    {
+      "name": "2018 Kona Big honzo st Blue",
+      "full": "https://files.bikeindex.org/uploads/Pu/147261/IMG_4006.JPG",
+      "large": "https://files.bikeindex.org/uploads/Pu/147261/large_IMG_4006.JPG",
+      "medium": "https://files.bikeindex.org/uploads/Pu/147261/medium_IMG_4006.JPG",
+      "thumb": "https://files.bikeindex.org/uploads/Pu/147261/small_IMG_4006.JPG"
     }
   ],
   "components": []

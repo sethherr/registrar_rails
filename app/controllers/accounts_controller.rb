@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
 
   def show
     @page_title = "GlobaliD Registrar Account"
+    @registrations = []
   end
 
   def edit; end
