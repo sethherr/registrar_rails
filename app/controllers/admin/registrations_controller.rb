@@ -7,7 +7,9 @@ class Admin::RegistrationsController < Admin::BaseController
   def index
     page = params[:page] || 1
     per_page = params[:per_page] || 100
-    @registrations = Registration.includes(:current_owner).reorder("#{sort_column} #{sort_direction}").page(page).per(per_page)
+    @registrations = Registration.includes(:current_owner)
+                                 .reorder("#{sort_column} #{sort_direction}")
+                                 .page(page).per(per_page)
   end
 
   def show; end
@@ -15,7 +17,7 @@ class Admin::RegistrationsController < Admin::BaseController
   private
 
   def sortable_columns
-    %w[created_at email name]
+    %w[created_at email name manufacturer_id main_category_id]
   end
 
   def find_registration

@@ -22,15 +22,6 @@ class AccountsController < ApplicationController
 
   private
 
-  def redirect_to_signup_unless_user_present!
-    if current_user.present?
-      @user = current_user
-      return true
-    end
-    redirect_to new_user_session_path
-    return
-  end
-
   def permitted_params
     params.require(:user).permit(:name)
   end

@@ -30,10 +30,10 @@
     .card-title
       %h4
         Your registrations
-        %span.float-right
-          = link_to "new registration", new_registration_path
+        %small.float-right
+          = link_to "new registration", new_registration_path, class: "btn btn-success"
     .card-text
       %ul.mt-4
         - @registrations.each do |registration|
           %li
-            = link_to registration.title, registration_path(registration)
+            = link_to registration.title, registration_path(registration.to_param)

@@ -38,4 +38,13 @@ class ApplicationController < ActionController::Base
   def controller_namespace
     @controller_namespace ||= (self.class.parent.name != "Object") ? self.class.parent.name.downcase : nil
   end
+
+  def redirect_to_signup_unless_user_present!
+    if current_user.present?
+      @user = current_user
+      return true
+    end
+    redirect_to new_user_session_path
+    return
+  end
 end

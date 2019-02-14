@@ -1,0 +1,54 @@
+# frozen_string_literal: true
+
+class RegistrationsController < ApplicationController
+  before_action :redirect_to_signup_unless_user_present!, except: %i[index show]
+  before_action :find_registration, except: %i[index new create]
+  before_action :authorize_registration_for_user!, except: %i[index show new create]
+
+  def index
+    page = params[:page] || 1
+    per_page = params[:per_page] || 100
+    @registrations = Registration.reorder(created_at: :desc).page(page).per(per_page)
+  end
+
+  def show
+  end
+
+  def edit
+  end
+
+  def new
+    @registration ||= Registration.new
+  end
+
+  def create
+    
+  end
+
+  def update
+    # @user.attributes = permitted_params
+    # if @user.errors.blank? && @user.save
+    #   flash[:success] = "Updated account successfully"
+    #   redirect_to account_path
+    # else
+    #   render :edit
+    # end
+  end
+
+  private
+
+  def permitted_params
+    params.require(:user).permit(:name)
+  end
+
+  def find_registration
+    @registration ||= Registration.find(params[:id])
+  end
+
+  def authorize_registration_for_user!
+    return true if @registration.current_owner == current_user
+    flash[:error] = "You are not the owner of that registration!"
+    redirect_to user_home
+    return
+  end
+end

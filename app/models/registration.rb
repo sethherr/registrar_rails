@@ -28,14 +28,17 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
+  def to_param; id end
+
   def current_ownership; ownerships.current.reorder(:id).last end
 
   def current_owner_calculated; current_ownership&.user end
 
-  # Minor convenience
   def main_category_tag; main_category&.name end
 
   def manufacturer_tag; manufacturer&.name end
+
+  def tags_list; tags.pluck(:name) end
 
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)
