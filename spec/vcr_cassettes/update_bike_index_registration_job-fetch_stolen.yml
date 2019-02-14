@@ -1,0 +1,75 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://bikeindex.org/api/v3/bikes/566562
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic MzQ4MWRhODg2ODk3Yjc5YjlhYTg0N2Q0ZTc0MGZhMzM1YjI0OGFmOGZmOGQzMTEzNmQ5MjFlODU4ZjljMmI2MDpY
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Faraday v0.15.4
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 04 Feb 2019 21:50:56 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=d83b66fc4869b289c0cf54e263dd755a71549317055; expires=Tue, 04-Feb-20
+        21:50:55 GMT; path=/; domain=.bikeindex.org; HttpOnly
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Etag:
+      - W/"17265ec99e62222ac8e24e7e85ad84f1"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 186165cf-6409-458e-9aac-af1e6fcd7c10
+      X-Runtime:
+      - '0.072605'
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Powered-By:
+      - cloud66
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 4a405b0f1b406d7e-SJC
+    body:
+      encoding: ASCII-8BIT
+      string: '{"bike":{"id":566562,"title":"2018 Trek FX3","serial":"WTU079C2334M","manufacturer_name":"Trek","frame_model":"FX3","year":2018,"frame_colors":["Red"],"thumb":"https://files.bikeindex.org/uploads/Pu/146611/small_IMG-0961.JPG","large_img":"https://files.bikeindex.org/uploads/Pu/146611/large_IMG-0961.JPG","is_stock_img":false,"stolen":true,"stolen_location":"San
+        Rafael,CA,94901","date_stolen":1549094400,"registration_created_at":1549248886,"registration_updated_at":1549299848,"url":"https://bikeindex.org/bikes/566562","api_url":"https://bikeindex.org/api/v1/bikes/566562","manufacturer_id":47,"paint_description":null,"name":"","frame_size":"","description":"","rear_tire_narrow":true,"front_tire_narrow":null,"type_of_cycle":"Bike","test_bike":false,"rear_wheel_size_iso_bsd":null,"front_wheel_size_iso_bsd":null,"handlebar_type_slug":"flat","frame_material_slug":null,"front_gear_type_slug":null,"rear_gear_type_slug":null,"stolen_record":{"date_stolen":1549094400,"location":"San
+        Rafael,CA,94901","latitude":37.9692926,"longitude":-122.5301023,"theft_description":"Put
+        bike in the backyard, locked wheel to frame. The next morning, I went to go
+        ride it and it was gone. ","locking_description":"U-lock","lock_defeat_description":"Lock
+        is missing, along with the bike.","police_report_number":"T19000086","police_report_department":"San
+        Rafael Police Department","created_at":1549248887,"create_open311":false,"id":69248},"public_images":[{"name":"2018
+        Trek Red","full":"https://files.bikeindex.org/uploads/Pu/146611/IMG-0961.JPG","large":"https://files.bikeindex.org/uploads/Pu/146611/large_IMG-0961.JPG","medium":"https://files.bikeindex.org/uploads/Pu/146611/medium_IMG-0961.JPG","thumb":"https://files.bikeindex.org/uploads/Pu/146611/small_IMG-0961.JPG"}],"components":[{"id":689471,"description":"Broken.
+        Clipped to handlebar, just a black metal circle. ","serial_number":"","component_type":"other","component_group":"Additional
+        parts","rear":null,"front":null,"manufacturer_name":null,"model_name":"","year":null},{"id":689470,"description":"strap
+        around handlebar to clip in a front headlight","serial_number":"","component_type":"lights","component_group":"Additional
+        parts","rear":null,"front":null,"manufacturer_name":null,"model_name":"","year":null},{"id":689469,"description":"black","serial_number":"","component_type":"water
+        bottle cage","component_group":"Additional parts","rear":null,"front":null,"manufacturer_name":null,"model_name":"","year":null}]}}'
+    http_version: 
+  recorded_at: Mon, 04 Feb 2019 21:50:56 GMT
+recorded_with: VCR 4.0.0

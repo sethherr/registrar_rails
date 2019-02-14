@@ -82,7 +82,9 @@ RSpec.describe UserIntegration, type: :model do
 
       describe "existing user" do
         let!(:user) { User.create(email: "seth@bikeindex.orgd", name: " ", password: "partypass1111") }
+        let(:target_job_ids) { [6, 32, 35] }
         it "updates name, not password" do
+          Sidekiq::Worker.clear_all
           expect(user.confirmed?).to be_falsey
           expect(user.valid_password?("partypass1111")).to be_truthy
           expect do
@@ -92,12 +94,13 @@ RSpec.describe UserIntegration, type: :model do
           expect(user.confirmed?).to be_truthy
           expect(user.name).to eq "Seth Herr"
           expect(user.valid_password?("partypass1111")).to be_truthy
-          # OpenStruct doesn't quite deserialize correctly, so just test presence
           expect(user.user_integrations.count).to eq 1
           user_integration = user.user_integrations.first
           expect(user_integration.external_id).to eq "85"
           expect(user_integration.provider).to eq "bike_index"
           expect(user_integration.auth_hash).to eq auth_hash.as_json
+          # Check that we successfully enqueue update_bike_index_registration_job
+          expect(UpdateBikeIndexRegistrationJob.jobs.map { |j| j["args"] }.flatten).to match_array target_job_ids
         end
       end
     end

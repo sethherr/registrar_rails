@@ -9,6 +9,8 @@ class UserIntegration < ApplicationRecord
 
   validates_presence_of :user_id
 
+  after_commit :update_user
+
   def self.providers; PROVIDER_ENUM.keys.map(&:to_s) end
 
   def self.user_from_omniauth(authed_user_id, provider, uid, auth)
@@ -27,5 +29,9 @@ class UserIntegration < ApplicationRecord
     # Update the user_integration with the user_id if relevant
     user_integration.update_attributes(user_id: user.id, auth_hash: auth)
     user
+  end
+
+  def update_user
+    user&.update_attributes(updated_at: Time.now)
   end
 end

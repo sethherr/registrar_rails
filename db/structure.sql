@@ -78,12 +78,184 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: external_registrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_registrations (
+    id bigint NOT NULL,
+    registration_id bigint,
+    provider integer,
+    external_id character varying,
+    external_data json,
+    external_data_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: external_registrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_registrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_registrations_id_seq OWNED BY public.external_registrations.id;
+
+
+--
+-- Name: registration_images; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_images (
+    id bigint NOT NULL,
+    name character varying,
+    registration_id bigint,
+    internal_image text,
+    external_image json,
+    listing_order integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registration_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.registration_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registration_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.registration_images_id_seq OWNED BY public.registration_images.id;
+
+
+--
+-- Name: registration_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_tags (
+    id bigint NOT NULL,
+    registration_id bigint,
+    tag_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registration_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.registration_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registration_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.registration_tags_id_seq OWNED BY public.registration_tags.id;
+
+
+--
+-- Name: registrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registrations (
+    id bigint NOT NULL,
+    thumb_url character varying,
+    description text,
+    status integer DEFAULT 0,
+    main_category_id bigint,
+    manufacturer_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.registrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.registrations_id_seq OWNED BY public.registrations.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
+
+
+--
+-- Name: tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tags (
+    id bigint NOT NULL,
+    name character varying,
+    slug character varying,
+    main_category boolean,
+    manufacturer boolean,
+    parent_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -169,6 +341,41 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: external_registrations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_registrations ALTER COLUMN id SET DEFAULT nextval('public.external_registrations_id_seq'::regclass);
+
+
+--
+-- Name: registration_images id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_images ALTER COLUMN id SET DEFAULT nextval('public.registration_images_id_seq'::regclass);
+
+
+--
+-- Name: registration_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_tags ALTER COLUMN id SET DEFAULT nextval('public.registration_tags_id_seq'::regclass);
+
+
+--
+-- Name: registrations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrations ALTER COLUMN id SET DEFAULT nextval('public.registrations_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
+
+
+--
 -- Name: user_integrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -191,11 +398,51 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: external_registrations external_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_registrations
+    ADD CONSTRAINT external_registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registration_images registration_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_images
+    ADD CONSTRAINT registration_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registration_tags registration_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_tags
+    ADD CONSTRAINT registration_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registrations registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrations
+    ADD CONSTRAINT registrations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -212,6 +459,55 @@ ALTER TABLE ONLY public.user_integrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_external_registrations_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_registrations_on_registration_id ON public.external_registrations USING btree (registration_id);
+
+
+--
+-- Name: index_registration_images_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_images_on_registration_id ON public.registration_images USING btree (registration_id);
+
+
+--
+-- Name: index_registration_tags_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_tags_on_registration_id ON public.registration_tags USING btree (registration_id);
+
+
+--
+-- Name: index_registration_tags_on_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_tags_on_tag_id ON public.registration_tags USING btree (tag_id);
+
+
+--
+-- Name: index_registrations_on_main_category_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrations_on_main_category_id ON public.registrations USING btree (main_category_id);
+
+
+--
+-- Name: index_registrations_on_manufacturer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrations_on_manufacturer_id ON public.registrations USING btree (manufacturer_id);
+
+
+--
+-- Name: index_tags_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_parent_id ON public.tags USING btree (parent_id);
 
 
 --
@@ -244,6 +540,11 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20190130221535'),
 ('20190203031814'),
-('20190203201834');
+('20190203201834'),
+('20190203230824'),
+('20190203232211'),
+('20190204231506'),
+('20190206191233'),
+('20190206191609');
 
 

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "users#index"
     get :clear_cache, to: "dashboard#clear_cache"
-    resources :users
+    resources :users, :registrations
   end
 
   authenticate :user, lambda { |u| u.developer? } do

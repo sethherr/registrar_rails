@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: { case_sensitive: false }
 
   before_validation :set_calculated_attributes
+  after_commit :update_external_registrations
 
   scope :admin, -> { where.not(admin_role: "not") }
 
@@ -47,10 +48,22 @@ class User < ActiveRecord::Base
     user_integrations.where(provider: provider).any?
   end
 
+  def bike_index_integration
+    user_integrations.where(provider: "bike_index").first
+  end
+
+  def bike_index_bike_ids
+    (bike_index_integration&.auth_hash&.dig("info") || {})["bike_ids"] || []
+  end
+
   def set_calculated_attributes
     self.api_key ||= generate_api_key
     # To avoid having to search through json fields, just throw the relevant things into a new field
     self.admin_search_field = calculated_admin_search_field
+  end
+
+  def update_external_registrations
+    bike_index_bike_ids.each { |i| UpdateBikeIndexRegistrationJob.perform_async(i) }
   end
 
   private
