@@ -57,10 +57,14 @@ class Ownership < ApplicationRecord
     if initial_owner_kind == "initial_owner_user"
       self.user = owner
       self.creation_notification_kind ||= "no_creation_notification"
-    elsif initial_owner_kind == "initial_owner_email"
+    else
       self.external_id = owner
-      self.creation_notification_kind ||= "email_creation_notification"
-      self.user = User.fuzzy_email_find(owner)
+      if initial_owner_kind == "initial_owner_email"
+        self.creation_notification_kind ||= "email_creation_notification"
+        self.user = User.fuzzy_email_find(owner)
+      elsif initial_owner_kind == "globalid"
+        self.creation_notification_kind ||= "no_creation_notification"
+      end
     end
   end
 
