@@ -9,6 +9,7 @@ class ExternalRegistration < ApplicationRecord
   belongs_to :registration
 
   validates_presence_of :registration_id
+  validates_uniqueness_of :external_id, scope: [:provider]
 
   enum provider: PROVIDER_ENUM
 

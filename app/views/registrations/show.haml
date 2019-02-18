@@ -22,6 +22,11 @@
               = @registration.manufacturer_tag
         %tr
           %td
+            Status
+          %td
+            = @registration.status
+        %tr
+          %td
             Tags
           %td
             = @registration.tags_list.join(", ")
