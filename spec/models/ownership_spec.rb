@@ -6,17 +6,23 @@ RSpec.describe Ownership, type: :model do
   describe "factories" do
     # Because of the combination of ownership and attestation, test factories create things correctly
     context "registration" do
-      # let(:registration) { FactoryBot.build(:registration_with_current_owner) }
+      let(:registration) { FactoryBot.create(:registration_with_current_owner) }
+      it "creates the associations correctly" do
+        expect(registration.valid?).to be_truthy
+        expect(registration.ownerships.count).to eq 1
+        expect(registration.attestations.count).to eq 1
+        expect(registration.current_ownership.attestations.count).to eq 1
+        expect(registration.ownerships.first.attestations.first).to eq registration.attestations.first
+      end
     end
     context "ownership" do
       let(:ownership) { FactoryBot.create(:ownership) }
       it "creates the associations correctly" do
         expect(ownership.valid?).to be_truthy
-        ownership.reload
         expect(ownership.attestations.count).to eq 1
-        expect(attestation.registration).to be_present
         attestation = ownership.attestations.first
-        expect(attestation.kind).to eq "ownership"
+        expect(attestation.kind).to eq "ownership_attestation"
+        expect(ownership.registration).to be_present
         expect(attestation.registration).to eq ownership.registration
         expect(attestation.ownership).to eq ownership
         expect(attestation.registration.ownerships.pluck(:id)).to eq([ownership.id])
@@ -24,10 +30,10 @@ RSpec.describe Ownership, type: :model do
       end
     end
     context "attestation" do
-      let(:attestation) { FactoryBot.build(:attestation_ownership) }
-      xit "creates the associations correctly" do
-        expect(attestation.save).to be_truthy
-        expect(attestation.kind).to eq "ownership"
+      let(:attestation) { FactoryBot.create(:attestation_ownership) }
+      it "creates the associations correctly" do
+        expect(attestation.valid?).to be_truthy
+        expect(attestation.kind).to eq "ownership_attestation"
         expect(attestation.ownership).to be_present
         expect(attestation.registration).to be_present
         ownership = attestation.ownership
@@ -58,7 +64,8 @@ RSpec.describe Ownership, type: :model do
         expect(registration.attestations.count).to eq 1
         attestation = registration.attestations.first
         expect(attestation.user).to eq user
-        expect(attestation.ownership?).to be_truthy
+        expect(attestation.ownership_attestation?).to be_truthy
+        expect(attestation.ownership).to eq ownership
         expect(user.attestations).to eq([attestation])
       end
       context "updates for user" do
@@ -79,8 +86,8 @@ RSpec.describe Ownership, type: :model do
           expect(new_ownership.current?).to be_truthy
           attestation = new_ownership.attestations.last
           expect(attestation.user).to eq user # Because it's the owner who sent it
-          expect(attestation.ownership?).to be_truthy
-          expect(user.attestations).to eq([attestation])
+          expect(attestation.ownership_attestation?).to be_truthy
+          expect(user.attestations.pluck(:id)).to eq([ownership.attestations.first.id, attestation.id])
         end
       end
     end
@@ -102,7 +109,7 @@ RSpec.describe Ownership, type: :model do
         attestation = registration.attestations.first
         expect(attestation.authorizer).to eq "authorizer_bike_index"
         expect(attestation.user).to be_nil
-        expect(attestation.ownership?).to be_truthy
+        expect(attestation.ownership_attestation?).to be_truthy
       end
     end
   end

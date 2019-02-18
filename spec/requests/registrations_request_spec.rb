@@ -86,7 +86,7 @@ RSpec.describe "/registrations", type: :request do
         expect(registration.attestations.count).to eq 1
         attestation = registration.attestations.first
         expect(attestation.user).to eq user
-        expect(attestation.ownership?).to be_truthy
+        expect(attestation.ownership_attestation?).to be_truthy
         expect(user.attestations).to eq([attestation])
       end
     end

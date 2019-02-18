@@ -19,7 +19,7 @@ class Ownership < ApplicationRecord
                        user: creator.is_a?(User) ? creator : nil,
                        ownership: ownership,
                        authorizer: authorizer_for_creator(creator),
-                       kind: "ownership")
+                       kind: "ownership_attestation")
     previous_ownership&.mark_no_longer_current
     ownership
   end
