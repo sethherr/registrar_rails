@@ -61,6 +61,17 @@ class Registration < ApplicationRecord
     end
   end
 
+  def transfer_ownership(creator, user_id: nil, email: nil)
+    if user_id.present?
+      new_owner = User.find(user_id)
+      initial_owner_kind = "initial_owner_user"
+    elsif email.present?
+      new_owner = email
+      initial_owner_kind = "initial_owner_email"
+    end
+    Ownership.create_for(self, creator: creator, owner: new_owner, initial_owner_kind: initial_owner_kind)
+  end
+
   def set_calculated_attributes
     self.status = external_registrations.first.status if external_registrations.any?
     self.thumb_url = registration_images.listing_order.first&.image_url(:small)

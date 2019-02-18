@@ -106,10 +106,51 @@ RSpec.describe Ownership, type: :model do
         expect(ownership.authorizer).to eq "authorizer_bike_index"
         expect(ownership.current?).to be_truthy
         expect(registration.attestations.count).to eq 1
+        expect(ownership.creation_notification_kind).to eq "no_creation_notification"
         attestation = registration.attestations.first
         expect(attestation.authorizer).to eq "authorizer_bike_index"
         expect(attestation.user).to be_nil
         expect(attestation.ownership_attestation?).to be_truthy
+      end
+    end
+  end
+
+  describe "owner" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:ownership) { Ownership.new(initial_owner_kind: initial_owner_kind, owner: new_owner) }
+    context "user" do
+      let(:initial_owner_kind) { "initial_owner_user" }
+      let(:new_owner) { user }
+      it "sets the owner, default creation_notification" do
+        expect(ownership.user).to eq user
+        expect(ownership.external_id).to be_nil
+        expect(ownership.creation_notification_kind).to eq "no_creation_notification"
+      end
+      context "with assigned email_creation_notification" do
+        let(:ownership) { Ownership.new(initial_owner_kind: initial_owner_kind, owner: new_owner, creation_notification_kind: "email_creation_notification") }
+        it "sets, sends email" do
+          expect(ownership.user).to eq user
+          expect(ownership.external_id).to be_nil
+          expect(ownership.creation_notification_kind).to eq "email_creation_notification"
+        end
+      end
+    end
+    context "email" do
+      let(:initial_owner_kind) { "initial_owner_email" }
+      let(:new_owner) { "party@stuff.com" }
+      it "sets the owner, default creation_notification" do
+        expect(ownership.user).to be_nil
+        expect(ownership.external_id).to eq new_owner
+        expect(ownership.creation_notification_kind).to eq "email_creation_notification"
+      end
+      context "user email" do
+        let(:new_owner) { user.email }
+        let(:ownership) { Ownership.new(initial_owner_kind: initial_owner_kind, owner: new_owner, creation_notification_kind: "no_creation_notification") }
+        it "sets the owner, assigned creation_notification" do
+          expect(ownership.user).to eq user
+          expect(ownership.external_id).to eq new_owner
+          expect(ownership.creation_notification_kind).to eq "no_creation_notification"
+        end
       end
     end
   end

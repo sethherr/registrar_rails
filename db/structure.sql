@@ -174,7 +174,8 @@ CREATE TABLE public.ownerships (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     external_id character varying,
-    external_id_kind integer
+    initial_owner_kind integer,
+    creation_notification_kind integer
 );
 
 
