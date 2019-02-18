@@ -13,7 +13,7 @@ RSpec.describe "/registrations", type: :request do
 
   context "logged in as user" do
     include_context :logged_in_as_user
-    let(:registration) { FactoryBot.create(:registration_with_owner, user: user) }
+    let(:registration) { FactoryBot.create(:registration_with_current_owner, user: user) }
     let(:tag_main) { FactoryBot.create(:tag_main) }
     let(:tag_manufacturer) { FactoryBot.create(:tag_manufacturer) }
     let(:valid_params) do
@@ -41,7 +41,7 @@ RSpec.describe "/registrations", type: :request do
         expect(response).to render_template("registrations/show")
       end
       context "not users registration" do
-        let(:registration) { FactoryBot.create(:registration_with_owner) }
+        let(:registration) { FactoryBot.create(:registration_with_current_owner) }
         it "renders" do
           registration.reload
           get "/registrations/#{registration.to_param}"

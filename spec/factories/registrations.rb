@@ -3,13 +3,13 @@
 FactoryBot.define do
   factory :registration do
     status { "registered" }
-    factory :registration_with_owner do
+    factory :registration_with_current_owner do
       transient do
         user { FactoryBot.create(:user) }
-        owner { user }
+        current_owner { user }
       end
       after(:create) do |registration, evaluator|
-        FactoryBot.create(:ownership, registration: registration, user: evaluator.owner)
+        FactoryBot.create(:ownership, registration: registration, user: evaluator.current_owner)
       end
     end
   end

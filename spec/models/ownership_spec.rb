@@ -3,6 +3,42 @@
 require "rails_helper"
 
 RSpec.describe Ownership, type: :model do
+  describe "factories" do
+    # Because of the combination of ownership and attestation, test factories create things correctly
+    context "registration" do
+      # let(:registration) { FactoryBot.build(:registration_with_current_owner) }
+    end
+    context "ownership" do
+      let(:ownership) { FactoryBot.create(:ownership) }
+      it "creates the associations correctly" do
+        expect(ownership.valid?).to be_truthy
+        ownership.reload
+        expect(ownership.attestations.count).to eq 1
+        expect(attestation.registration).to be_present
+        attestation = ownership.attestations.first
+        expect(attestation.kind).to eq "ownership"
+        expect(attestation.registration).to eq ownership.registration
+        expect(attestation.ownership).to eq ownership
+        expect(attestation.registration.ownerships.pluck(:id)).to eq([ownership.id])
+        expect(ownership.registration.attestations.pluck(:id)).to eq([attestation.id])
+      end
+    end
+    context "attestation" do
+      let(:attestation) { FactoryBot.build(:attestation_ownership) }
+      xit "creates the associations correctly" do
+        expect(attestation.save).to be_truthy
+        expect(attestation.kind).to eq "ownership"
+        expect(attestation.ownership).to be_present
+        expect(attestation.registration).to be_present
+        ownership = attestation.ownership
+        expect(ownership.attestations.pluck(:id)).to eq([attestation.id])
+        expect(attestation.registration).to eq ownership.registration
+        expect(attestation.registration.ownerships.pluck(:id)).to eq([ownership.id])
+        expect(ownership.registration.attestations.pluck(:id)).to eq([attestation.id])
+      end
+    end
+  end
+
   describe "create_ownership" do
     let(:registration) { FactoryBot.create(:registration) }
     let(:user) { FactoryBot.create(:user) }
