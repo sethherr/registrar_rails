@@ -6,7 +6,8 @@ class API::V1::User < API::Base
     get "/" do
       {
         current_user: {
-          info: current_user && "nothing here"
+          name: current_user&.display_name,
+          authorizations: current_user.user_integrations.pluck(:provider)
         }
       }
     end
