@@ -3,6 +3,8 @@
 class RegistrationImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
+  PLACEHOLDER_URL = "https://files.bikeindex.org/blank.png"
+
   after :remove, :delete_empty_upstream_dirs
 
   def delete_empty_upstream_dirs
@@ -29,7 +31,7 @@ class RegistrationImageUploader < CarrierWave::Uploader::Base
 
   # Fallback so the page doesn't break if the image isn't there
   def default_url
-    "https://files.bikeindex.org/blank.png"
+    PLACEHOLDER_URL
   end
 
   process :validate_dimensions

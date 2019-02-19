@@ -16,10 +16,10 @@
             Main Category
           %td
             = @registration.main_category_tag
-        - unless @registration.hide_manufacturer?
+        - if @registration.maker_title.present?
           %tr
             %td
-              Manufacturer
+              = @registration.maker_title
             %td
               = @registration.manufacturer_tag
         %tr
