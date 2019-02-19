@@ -64,10 +64,10 @@ RSpec.describe Registration, type: :model do
       expect(ownership).to be_present # Create and then clear queue
       Sidekiq::Worker.clear_all
     end
-    context "user_id" do
+    context "user" do
       it "accepts user_id" do
         expect(ownership.current?).to be_truthy
-        ownership2 = registration.transfer_ownership(user, user_id: user2.id)
+        ownership2 = registration.transfer_ownership(creator: user, new_owner: user2.id, new_owner_kind: "user")
         expect(ownership2.valid?).to be_truthy
         expect(ownership2.current?).to be_truthy
         expect(ownership2.external_id).to be_nil
@@ -79,12 +79,28 @@ RSpec.describe Registration, type: :model do
         expect(user2.registrations.pluck(:id)).to eq([registration.id])
         expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
       end
+      context "user" do
+        it "accepts user" do
+          expect(ownership.current?).to be_truthy
+          ownership2 = registration.transfer_ownership(creator: user, new_owner: user2, new_owner_kind: "user")
+          expect(ownership2.valid?).to be_truthy
+          expect(ownership2.current?).to be_truthy
+          expect(ownership2.external_id).to be_nil
+          expect(ownership2.initial_owner_kind).to eq "initial_owner_user"
+          ownership.reload
+          expect(ownership.previous?).to be_truthy
+          expect(registration.current_owner).to eq user2
+          expect(registration.current_ownership).to eq ownership2
+          expect(user2.registrations.pluck(:id)).to eq([registration.id])
+          expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+        end
+      end
     end
     context "email" do
       let(:email) { "something@stuff.com" }
       it "accepts email, only enqueues one notification job" do
         expect(ownership.current?).to be_truthy
-        ownership2 = registration.transfer_ownership(user, email: email)
+        ownership2 = registration.transfer_ownership(creator: user, new_owner: email, new_owner_kind: "email")
         expect(ownership2.valid?).to be_truthy
         expect(ownership2.current?).to be_truthy
         expect(ownership2.external_id).to eq "something@stuff.com"
@@ -100,7 +116,7 @@ RSpec.describe Registration, type: :model do
         it "assigns the ownership too" do
           expect(user2).to be_present
           expect(ownership.current?).to be_truthy
-          ownership2 = registration.transfer_ownership(user, email: email)
+          ownership2 = registration.transfer_ownership(creator: user, new_owner: email, new_owner_kind: "email")
           expect(ownership2.valid?).to be_truthy
           expect(ownership2.current?).to be_truthy
           expect(ownership2.external_id).to eq email
@@ -117,7 +133,7 @@ RSpec.describe Registration, type: :model do
     context "globalid" do
       it "accepts globalid, only enqueues one notification job" do
         expect(ownership.current?).to be_truthy
-        ownership2 = registration.transfer_ownership(user, globalid: "sethherr")
+        ownership2 = registration.transfer_ownership(creator: user, new_owner: "sethherr", new_owner_kind: "globalid")
         expect(ownership2.valid?).to be_truthy
         expect(ownership2.current?).to be_truthy
         expect(ownership2.external_id).to eq "sethherr"
@@ -127,6 +143,16 @@ RSpec.describe Registration, type: :model do
         expect(registration.current_owner).to be_nil
         expect(registration.current_ownership).to eq ownership2
         expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+      end
+    end
+    context "unknown kind" do
+      it "raises error" do
+        expect(ownership.current?).to be_truthy
+        expect do
+          registration.transfer_ownership(creator: user, new_owner: "sethherr", new_owner_kind: "XXXZZZ")
+        end.to raise_error(/unknown/i)
+        expect(ownership.current?).to be_truthy
+        expect(SendOwnershipCreationNotificationJob.jobs.count).to eq 0
       end
     end
   end
