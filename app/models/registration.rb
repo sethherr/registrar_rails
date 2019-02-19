@@ -12,12 +12,12 @@ class Registration < ApplicationRecord
   belongs_to :main_category, class_name: "Tag"
   belongs_to :manufacturer, class_name: "Tag"
   belongs_to :current_owner, class_name: "User"
-  has_many :external_registrations
-  has_many :registration_images
-  has_many :registration_tags
+  has_many :external_registrations, dependent: :destroy
+  has_many :registration_images, dependent: :destroy
+  has_many :registration_tags, dependent: :destroy
   has_many :tags, through: :registration_tags
-  has_many :ownerships
-  has_many :attestations
+  has_many :ownerships, dependent: :destroy
+  has_many :attestations, dependent: :destroy
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
 
   enum status: STATUS_ENUM
