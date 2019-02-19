@@ -3,3 +3,26 @@
     Update your registration
 
 = render partial: "form"
+
+
+= form_for @registration, url: { action: "update"  } do |f|
+  .card.mt-4.account-authorizations-list
+    .card-body
+      .card-title
+        %h4
+          Transfer registration
+      .card-text
+        .row
+          .col-8.col-md-6
+            .form-group
+              = f.label :new_owner do
+                New owner address
+              = f.text_field :new_owner, class: "form-control"
+          .col-4
+            .form-group
+              = f.label :new_owner_kind, "Type"
+              = f.select :new_owner_kind, [%w[Email email], %w[GlobaliD globalid]], {}, { class: "form-control" }
+          .col-12.col-md-2
+            .form-group
+              %label &nbsp;
+              = f.submit(:save, class: "btn btn-outline-primary form-control")

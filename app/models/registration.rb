@@ -24,6 +24,10 @@ class Registration < ApplicationRecord
 
   before_save :set_calculated_attributes
 
+  attr_accessor :new_owner, :new_owner_kind
+
+  def self.statuses; STATUS_ENUM.keys.map(&:to_s) end
+
   def self.lookup_external_id(provider, id)
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
@@ -65,18 +69,14 @@ class Registration < ApplicationRecord
     end
   end
 
-  def transfer_ownership(creator, user_id: nil, email: nil, globalid: nil)
-    if user_id.present?
-      new_owner = User.find(user_id)
-      initial_owner_kind = "initial_owner_user"
-    elsif email.present?
-      new_owner = email
-      initial_owner_kind = "initial_owner_email"
-    elsif globalid.present?
-      new_owner = globalid
-      initial_owner_kind = "initial_owner_globalid"
+  def transfer_ownership(creator:, new_owner:, new_owner_kind:)
+    raise "Unknown new ownership kind: #{new_owner_kind}" unless %w[user email globalid].include?(new_owner_kind)
+    if new_owner_kind == "user"
+      new_owner = new_owner.is_a?(User) ? new_owner : User.find(new_owner)
     end
-    Ownership.create_for(self, creator: creator, owner: new_owner, initial_owner_kind: initial_owner_kind)
+    Ownership.create_for(self, creator: creator,
+                               owner: new_owner,
+                               initial_owner_kind: "initial_owner_#{new_owner_kind}")
   end
 
   def set_calculated_attributes

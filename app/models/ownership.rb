@@ -23,7 +23,8 @@ class Ownership < ApplicationRecord
 
   after_commit :update_registration_and_send_notification
 
-  # Always create ownerships through this method!
+  # Use registration#transfer_ownership if ownership alread exists. Otherwise,
+  # - always create ownerships through this method!
   def self.create_for(registration, creator:, owner:, initial_owner_kind: "initial_owner_user")
     previous_ownership = registration.current_ownership
     ownership = create(registration: registration,

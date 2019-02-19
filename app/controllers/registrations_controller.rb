@@ -15,7 +15,7 @@ class RegistrationsController < ApplicationController
   end
 
   def new
-    @registration ||= Registration.new
+    @registration ||= Registration.new(status: "registered")
   end
 
   def create
@@ -33,10 +33,32 @@ class RegistrationsController < ApplicationController
 
   def edit; end
 
+  def update
+    if @registration.update(permitted_params)
+      if new_owner_params[:new_owner].present?
+        @registration.transfer_ownership(creator: current_user,
+                                         new_owner: new_owner_params[:new_owner],
+                                         new_owner_kind: new_owner_params[:new_owner_kind])
+        flash[:success] = "Registration send to #{new_owner_params[:new_owner]}"
+        redirect_to account_path
+      else
+        flash[:success] = "Registration updated"
+        redirect_to registration_path(@registration)
+      end
+    else
+      render :edit
+    end
+  end
+
   private
 
   def permitted_params
-    params.require(:registration).permit(:title, :description, :main_category_tag, :manufacturer_tag, :tags_list)
+    params.require(:registration).permit(:title, :description, :main_category_tag,
+                                         :manufacturer_tag, :tags_list, :status)
+  end
+
+  def new_owner_params
+    params.require(:registration).permit(:new_owner, :new_owner_kind)
   end
 
   def find_registration
