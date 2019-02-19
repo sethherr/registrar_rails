@@ -172,7 +172,10 @@ CREATE TABLE public.ownerships (
     started_at timestamp without time zone,
     ended_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    external_id character varying,
+    initial_owner_kind integer,
+    creation_notification_kind integer
 );
 
 
@@ -709,6 +712,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190214183813'),
 ('20190214200816'),
 ('20190214214716'),
-('20190214214825');
+('20190214214825'),
+('20190218210702');
 
 

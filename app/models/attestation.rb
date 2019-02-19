@@ -2,10 +2,10 @@
 
 class Attestation < ApplicationRecord
   KIND_ENUM = {
-    ownership: 0,
-    appraisal: 1,
-    service_record: 2,
-    information: 3
+    ownership_attestation: 0
+    appraisal_attestation: 1,
+    service_record_attestation: 2,
+    information_attestation: 3
   }.freeze
 
   AUTHORIZER_ENUM = {

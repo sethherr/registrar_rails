@@ -54,4 +54,80 @@ RSpec.describe Registration, type: :model do
       end
     end
   end
+
+  describe "transfer_ownership" do
+    let(:registration) { FactoryBot.create(:registration_with_current_owner) }
+    let(:ownership) { registration.current_ownership }
+    let(:user) { registration.current_owner }
+    let(:user2) { FactoryBot.create(:user) }
+    before do
+      expect(ownership).to be_present # Create and then clear queue
+      Sidekiq::Worker.clear_all
+    end
+    context "user_id" do
+      it "accepts user_id" do
+        expect(ownership.current?).to be_truthy
+        ownership2 = registration.transfer_ownership(user, user_id: user2.id)
+        expect(ownership2.valid?).to be_truthy
+        expect(ownership2.current?).to be_truthy
+        expect(ownership2.external_id).to be_nil
+        expect(ownership2.initial_owner_kind).to eq "initial_owner_user"
+        ownership.reload
+        expect(ownership.previous?).to be_truthy
+        expect(registration.current_owner).to eq user2
+        expect(registration.current_ownership).to eq ownership2
+        expect(user2.registrations.pluck(:id)).to eq([registration.id])
+        expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+      end
+    end
+    context "email" do
+      let(:email) { "something@stuff.com" }
+      it "accepts email, only enqueues one notification job" do
+        expect(ownership.current?).to be_truthy
+        ownership2 = registration.transfer_ownership(user, email: email)
+        expect(ownership2.valid?).to be_truthy
+        expect(ownership2.current?).to be_truthy
+        expect(ownership2.external_id).to eq "something@stuff.com"
+        expect(ownership2.initial_owner_kind).to eq "initial_owner_email"
+        ownership.reload
+        expect(ownership.previous?).to be_truthy
+        expect(registration.current_owner).to be_nil
+        expect(registration.current_ownership).to eq ownership2
+        expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+      end
+      context "user email" do
+        let(:email) { user2.email }
+        it "assigns the ownership too" do
+          expect(user2).to be_present
+          expect(ownership.current?).to be_truthy
+          ownership2 = registration.transfer_ownership(user, email: email)
+          expect(ownership2.valid?).to be_truthy
+          expect(ownership2.current?).to be_truthy
+          expect(ownership2.external_id).to eq email
+          expect(ownership2.initial_owner_kind).to eq "initial_owner_email"
+          ownership.reload
+          expect(ownership.previous?).to be_truthy
+          expect(registration.current_owner).to eq user2
+          expect(registration.current_ownership).to eq ownership2
+          expect(user2.registrations.pluck(:id)).to eq([registration.id])
+          expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+        end
+      end
+    end
+    context "globalid" do
+      it "accepts globalid, only enqueues one notification job" do
+        expect(ownership.current?).to be_truthy
+        ownership2 = registration.transfer_ownership(user, globalid: "sethherr")
+        expect(ownership2.valid?).to be_truthy
+        expect(ownership2.current?).to be_truthy
+        expect(ownership2.external_id).to eq "sethherr"
+        expect(ownership2.initial_owner_kind).to eq "initial_owner_globalid"
+        ownership.reload
+        expect(ownership.previous?).to be_truthy
+        expect(registration.current_owner).to be_nil
+        expect(registration.current_ownership).to eq ownership2
+        expect(SendOwnershipCreationNotificationJob.jobs.map { |j| j["args"] }.flatten).to eq([ownership2.id])
+      end
+    end
+  end
 end
