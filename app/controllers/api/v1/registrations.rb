@@ -26,8 +26,7 @@ class API::V1::Registrations < API::Base
 
     desc "Record Register for Current User"
     params do
-      optional :status, type: String, desc: "status"
-      # requires :status, type: String, values: Registration.statuses, desc: "status"
+      requires :status, type: String, values: Registration.statuses, desc: "status"
       optional :title, type: String, desc: "title"
       optional :description, type: String, desc: "description"
       optional :main_category, type: String, desc: "main category"
