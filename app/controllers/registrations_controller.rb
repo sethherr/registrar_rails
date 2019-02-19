@@ -3,12 +3,12 @@
 class RegistrationsController < ApplicationController
   before_action :redirect_to_signup_unless_user_present!, except: %i[index show]
   before_action :find_registration, except: %i[index new create]
-  before_action :authorize_registration_for_user!, except: %i[index show new create]
+  before_action :authorize_registration_for_user!, except: %i[index new create]
 
   def index
     page = params[:page] || 1
     per_page = params[:per_page] || 100
-    @registrations = Registration.reorder(created_at: :desc).page(page).per(per_page)
+    @registrations = available_registrations.reorder(created_at: :desc).page(page).per(per_page)
   end
 
   def show
@@ -31,6 +31,8 @@ class RegistrationsController < ApplicationController
     end
   end
 
+  def edit; end
+
   private
 
   def permitted_params
@@ -38,13 +40,17 @@ class RegistrationsController < ApplicationController
   end
 
   def find_registration
-    @registration ||= Registration.friendly_find(params[:id])
+    @registration ||= available_registrations.friendly_find(params[:id])
+  end
+
+  def available_registrations
+    current_user.present? ? current_user.registrations : Registration.where(id: nil)
   end
 
   def authorize_registration_for_user!
-    return true if @registration.current_owner == current_user
+    return true if @registration.present? && @registration.current_owner == current_user
     flash[:error] = "You are not the owner of that registration!"
-    redirect_to user_home
+    redirect_to user_root_path
     return
   end
 end

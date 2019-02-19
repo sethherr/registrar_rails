@@ -2,7 +2,7 @@
 
 class Attestation < ApplicationRecord
   KIND_ENUM = {
-    ownership_attestation: 0
+    ownership_attestation: 0,
     appraisal_attestation: 1,
     service_record_attestation: 2,
     information_attestation: 3

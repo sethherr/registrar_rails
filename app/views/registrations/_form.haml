@@ -1,5 +1,5 @@
-
-= form_for @registration, url: { action: ["new", "create"].include?(params[:action]) ? "create" : "update"  } do |f|
+- new_registration_page = ["new", "create"].include?(params[:action])
+= form_for @registration, url: { action: new_registration_page ? "create" : "update"  } do |f|
   - if @registration.errors.any?
     = render partial: "/shared/errors", locals: { name: "Registration", obj: @registration }
   .row
@@ -18,7 +18,7 @@
         = f.text_field :manufacturer_tag, class: "form-control"
     .col-sm-8
       .form-group
-        = f.label :tags_list
+        = f.label :tags_list, "Tags"
         = f.text_field :tags_list, { value: @registration.tags_list.join(", "), class: "form-control" }
         %small.form-text.text-muted#tags_list_help
           Separate tags with commas
@@ -28,7 +28,27 @@
         = f.label :description
         = f.text_area :description, class: "form-control"
 
+
+
+
+  - unless new_registration_page
+    dsdf
+
   .row.mt-4
     .col-md-6
       .form-group
         = f.submit(:save, class: "btn btn-primary")
+
+
+  - unless new_registration_page
+    .card.mt-4.account-authorizations-list
+      .card-body
+        .card-title
+          %h4
+            Transfer registration
+        .card-text
+          .row
+            .col-sm-6
+              .form-group
+                = f.label :manufacturer_tag, "Manufacturer"
+                = f.text_field :manufacturer_tag, class: "form-control"

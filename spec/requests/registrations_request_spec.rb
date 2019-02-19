@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "/registrations", type: :request do
   describe "/registrations" do
-    it "redirects" do
+    it "renders" do
       get "/registrations"
       expect(response.code).to eq "200"
       expect(response).to render_template("registrations/index")
@@ -42,11 +42,19 @@ RSpec.describe "/registrations", type: :request do
       end
       context "not users registration" do
         let(:registration) { FactoryBot.create(:registration_with_current_owner) }
-        it "renders" do
+        it "redirects" do
           registration.reload
           get "/registrations/#{registration.to_param}"
-          expect(response.code).to eq "200"
-          expect(response).to render_template("registrations/show")
+          expect(flash[:error]).to be_present
+          expect(response).to redirect_to(account_path)
+        end
+      end
+      context "no registration" do
+        let(:registration) { FactoryBot.create(:registration_with_current_owner) }
+        it "redirects" do
+          registration.reload
+          get "/registrations/xc78xcvnanasdf"
+          expect(response).to redirect_to(account_path)
         end
       end
     end
@@ -88,6 +96,24 @@ RSpec.describe "/registrations", type: :request do
         expect(attestation.user).to eq user
         expect(attestation.ownership_attestation?).to be_truthy
         expect(user.attestations).to eq([attestation])
+      end
+    end
+
+    describe "edit" do
+      it "renders" do
+        registration.reload
+        get "/registrations/#{registration.id}/edit"
+        expect(assigns(:registration)).to eq registration # Friendly find, based on id or guuid
+        expect(response.code).to eq "200"
+        expect(response).to render_template("registrations/edit")
+      end
+      context "not users registration" do
+        let(:registration) { FactoryBot.create(:registration_with_current_owner) }
+        it "redirects" do
+          registration.reload
+          get "/registrations/#{registration.to_param}/edit"
+          expect(response).to redirect_to(account_path)
+        end
       end
     end
   end

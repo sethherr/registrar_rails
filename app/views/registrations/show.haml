@@ -1,6 +1,8 @@
 .admin-header
   %h1
     = @registration.title
+    .float-right
+      = link_to "edit", edit_registration_path(@registration), class: "btn btn-secondary btn-sm"
 
 %p
   = @registration.description

@@ -28,9 +28,13 @@ class Registration < ApplicationRecord
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
 
-  # Lol, just finding by uuid for now
+  def self.integer_id?(str)
+    str.is_a?(Integer) || str.match(/\A\d*\z/).present?
+  end
+
   def self.friendly_find(id_or_uuid)
-    Registration.find_by_uuid(id_or_uuid)
+    return nil unless id_or_uuid.present?
+    integer_id?(id_or_uuid) ? find_by_id(id_or_uuid) : find_by_uuid(id_or_uuid)
   end
 
   def to_param; uuid end
