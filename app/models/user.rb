@@ -35,6 +35,11 @@ class User < ActiveRecord::Base
     results.any? ? results : where("phone_number ILIKE ?", "%#{str.strip}%")
   end
 
+  def self.fuzzy_email_find(str = nil)
+    return nil unless str.present?
+    where(email: str).first
+  end
+
   def admin?; admin_role != "not" end
 
   def display_name; name.present? ? name : email end

@@ -1,0 +1,17 @@
+
+%h1
+  - if @registration.ownerships.count > 1
+    Registration transfer
+  - else
+    New Registration
+  recorded on #{link_to "GlobaliD Registrar", root_url}
+
+%p
+  You are now the owner of the Registration for
+  %em
+    = @registration.title
+
+%p
+  View this registration at:
+  %br
+  = link_to registration_url(@registration.to_param).to_s.gsub(/https?:\/\//, ""), registration_url(@registration.to_param)
