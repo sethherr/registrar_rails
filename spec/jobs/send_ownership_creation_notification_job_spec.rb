@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe SendOwnershipCreationNotificationJob do
   let(:subject) { SendOwnershipCreationNotificationJob }
   let(:instance) { subject.new }
+  before { ActionMailer::Base.deliveries = [] }
 
   describe "perform" do
     context "no notification" do
