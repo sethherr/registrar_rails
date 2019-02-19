@@ -3,15 +3,16 @@
 require "rails_helper"
 
 RSpec.describe ApplicationMailer, type: :mailer do
-  describe "test" do
-    let(:user) { FactoryBot.create(:user) }
-    let(:mail) { ApplicationMailer.test_email(user) }
+  describe "new_ownership_notification" do
+    let(:ownership) { FactoryBot.create(:ownership) }
+    let(:mail) { ApplicationMailer.new_ownership_notification(ownership) }
 
     it "renders" do
-      expect(mail.subject).to eq "test email"
-      expect(mail.to).to eq([user.email])
+      ownership.reload
+      expect(mail.subject).to match(/registration/i)
+      expect(mail.to).to eq([ownership.email])
       expect(mail.from).to eq(["support@globalidregistrar.net"])
-      expect(mail.body.encoded).to match(/Test email/)
+      expect(mail.body.encoded).to match(/registrar/)
     end
   end
 end

@@ -14,4 +14,4 @@
 %p
   View this registration at:
   %br
-  = link_to registration_url(@registration).to_s.gsub(/https?:\/\//, ""), registration_url(@registration)
+  = link_to registration_url(@registration.to_param).to_s.gsub(/https?:\/\//, ""), registration_url(@registration.to_param)
