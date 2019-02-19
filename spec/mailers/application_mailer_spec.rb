@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ApplicationMailer, type: :mailer do
+  before { ActionMailer::Base.deliveries = [] }
   describe "new_ownership_notification" do
     let(:ownership) { FactoryBot.create(:ownership) }
     let(:mail) { ApplicationMailer.new_ownership_notification(ownership) }
