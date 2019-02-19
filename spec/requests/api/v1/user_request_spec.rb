@@ -16,16 +16,26 @@ RSpec.describe base_url, type: :request do
       end
     end
 
-    context "a location" do
+    context "logged in" do
       let(:target) do
         {
-          info: "nothing here"
+          name: user.display_name,
+          authorizations: []
         }
       end
       it "responds" do
         get base_url, headers: authorization_headers
         expect(json_result["current_user"]).to eq target.as_json
         expect(response.code).to eq("200")
+      end
+      context "with Bike Index authorized" do
+        let(:target_with_authorization) { target.merge(authorizations: ["bike_index"]) }
+        let!(:user_integration) { FactoryBot.create(:user_integration_bike_index, user: user) }
+        it "responds" do
+          get base_url, headers: authorization_headers
+          expect(json_result["current_user"]).to eq target_with_authorization.as_json
+          expect(response.code).to eq("200")
+        end
       end
     end
   end

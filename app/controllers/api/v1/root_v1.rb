@@ -35,6 +35,7 @@ class API::V1::RootV1 < API::Base
 
   mount API::V1::Status
   mount API::V1::User
+  mount API::V1::Registrations
 
   add_swagger_documentation \
     host: ENV["BASE_DOMAIN"].gsub(/https?.../, ""),
@@ -43,7 +44,7 @@ class API::V1::RootV1 < API::Base
     hide_documentation_path: true,
     info: {
       title: "Registrar API V1",
-      description: "Register all the things!"
+      description: "Register everything!"
     }
 
   route :any, "*path" do

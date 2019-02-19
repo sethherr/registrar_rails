@@ -23,4 +23,8 @@ class Attestation < ApplicationRecord
 
   enum kind: KIND_ENUM
   enum authorizer: AUTHORIZER_ENUM
+
+  def kind_display
+    kind&.gsub(/_attestation/, "")
+  end
 end
