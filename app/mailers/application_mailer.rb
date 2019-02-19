@@ -7,9 +7,10 @@ class ApplicationMailer < ActionMailer::Base
   include Devise::Controllers::UrlHelpers
   include Devise::Mailers::Helpers
 
-  def test_email(user)
-    @user = user
-    mail(subject: "test email", to: @user.email)
+  def new_ownership_notification(ownership)
+    @ownership = ownership
+    @registration = @ownership.registration
+    mail(subject: "Registration transfer: #{@registration.title}", to: @ownership.email)
   end
 
   def confirmation_instructions(record, token, opts = {})

@@ -142,6 +142,7 @@ RSpec.describe Ownership, type: :model do
         expect(ownership.user).to be_nil
         expect(ownership.external_id).to eq new_owner
         expect(ownership.creation_notification_kind).to eq "email_creation_notification"
+        expect(ownership.email).to eq "party@stuff.com"
       end
       context "user email" do
         let(:new_owner) { user.email }
@@ -150,6 +151,7 @@ RSpec.describe Ownership, type: :model do
           expect(ownership.user).to eq user
           expect(ownership.external_id).to eq new_owner
           expect(ownership.creation_notification_kind).to eq "no_creation_notification"
+          expect(ownership.email).to eq user.email
         end
       end
     end

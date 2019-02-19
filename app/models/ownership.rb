@@ -53,6 +53,12 @@ class Ownership < ApplicationRecord
 
   def authorizer; attestations.reorder(:id).first&.authorizer end
 
+  def email
+    @email ||= user&.email
+    @email ||= initial_owner_email? ? external_id : nil
+    @email
+  end
+
   def owner=(owner)
     if initial_owner_kind == "initial_owner_user"
       self.user = owner
