@@ -53,8 +53,6 @@ class Registration < ApplicationRecord
 
   def tags_list; tags.pluck(:name) end
 
-  def hide_manufacturer?; main_category == "Pet" end
-
   def manufacturer_tag=(val)
     self.manufacturer = Tag.friendly_find_or_create(val)
   end
@@ -77,6 +75,11 @@ class Registration < ApplicationRecord
     Ownership.create_for(self, creator: creator,
                                owner: new_owner,
                                initial_owner_kind: "initial_owner_#{new_owner_kind}")
+  end
+
+  def maker_title
+    return nil if main_category_tag == "Pet"
+    "Maker" # Could be author too
   end
 
   def set_calculated_attributes

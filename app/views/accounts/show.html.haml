@@ -25,15 +25,12 @@
           - else
             = link_to "Authorize Bike Index", user_bike_index_omniauth_authorize_path, class: "btn btn-sm btn-success"
 
-.card.mt-4.account-authorizations-list
+.card.mt-4
   .card-body
     .card-title
       %h4
         Your registrations
         %small.float-right
           = link_to "new registration", new_registration_path, class: "btn btn-success"
-    .card-text
-      %ul.mt-4
-        - @registrations.each do |registration|
-          %li
-            = link_to registration.title, registration_path(registration.to_param)
+    .card-text.mt-4
+      = render partial: "/registrations/table", locals: { registrations: @registrations }

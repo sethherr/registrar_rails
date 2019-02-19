@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   resource :account, only: %i[show edit update]
 
-  resources :registrations
+  resources :registrations, :attestations
 
   resources :documentation, only: [:index] do
     collection do

@@ -1,0 +1,28 @@
+%table.table.table-striped.registration-table
+  %thead
+    %th
+    %th
+      Registered
+    %th
+      Status
+    %th
+      Title
+    %th
+      Attestations
+  %tbody
+    - registrations.each do |registration|
+      %tr
+        %td
+          = image_tag registration.thumb_url.present? ? registration.thumb_url : RegistrationImageUploader::PLACEHOLDER_URL
+        %td
+          %a.convertTime{ href: registration_path(registration.to_param) }
+            = l registration.created_at, format: :convert_time
+        %td
+          = registration.status
+        %td
+          = registration.title
+          %br
+          %small.less-strong
+            = registration.description
+        %td
+          = registration.attestations.count

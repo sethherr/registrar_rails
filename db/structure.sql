@@ -92,6 +92,40 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: attestation_images; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attestation_images (
+    id bigint NOT NULL,
+    name character varying,
+    attestation_id bigint,
+    image text,
+    listing_order integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: attestation_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.attestation_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attestation_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.attestation_images_id_seq OWNED BY public.attestation_images.id;
+
+
+--
 -- Name: attestations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -103,7 +137,9 @@ CREATE TABLE public.attestations (
     kind integer,
     authorizer integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    title character varying,
+    description text
 );
 
 
@@ -430,6 +466,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: attestation_images id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attestation_images ALTER COLUMN id SET DEFAULT nextval('public.attestation_images_id_seq'::regclass);
+
+
+--
 -- Name: attestations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -498,6 +541,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: attestation_images attestation_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attestation_images
+    ADD CONSTRAINT attestation_images_pkey PRIMARY KEY (id);
 
 
 --
@@ -578,6 +629,13 @@ ALTER TABLE ONLY public.user_integrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_attestation_images_on_attestation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attestation_images_on_attestation_id ON public.attestation_images USING btree (attestation_id);
 
 
 --
@@ -713,6 +771,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190214200816'),
 ('20190214214716'),
 ('20190214214825'),
-('20190218210702');
+('20190218210702'),
+('20190219193533'),
+('20190219194700');
 
 
