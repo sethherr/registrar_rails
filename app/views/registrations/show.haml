@@ -39,3 +39,51 @@
           .col-4
             = link_to image.image_url do
               = image_tag(image.image_url(:small))
+
+.card.mt-4
+  .card-body
+    .card-title
+      %h4
+        Attestations
+        %small.float-right
+          = link_to "new attestation", new_attestation_path(registration_id: @registration), class: "btn btn-success"
+    .card-text.mt-4
+      %table.table.table-striped.attestations-table
+        %thead
+          %th
+            Recorded
+          %th
+            Kind
+          %th
+            Title
+          %th
+            Images
+        %tbody
+          - @attestations.each do |attestation|
+            %tr
+              %td
+                %span.convertTime
+                  = l attestation.created_at, format: :convert_time
+                %br
+                %small.less-strong
+                  Authorized by
+                  - if attestation.authorizer_owner?
+                    %em owner
+                  - elsif attestation.authorizer_bike_index?
+                    %em Bike Index
+                  - elsif attestation.authorizer_globalid?
+                    %em GlobaliD
+              %td
+                = attestation.kind.gsub(/_attestation/, "").titleize.strip
+              %td
+                = attestation.title
+                - if attestation.description.present?
+                  %br
+                  %small.less-strong
+                    = attestation.description
+              %td
+                .row
+                  - attestation.attestation_images.each do |image|
+                    .col-4
+                      = link_to image.image_url do
+                        = image_tag(image.image_url(:small))

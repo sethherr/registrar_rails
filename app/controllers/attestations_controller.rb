@@ -12,7 +12,6 @@ class RegistrationsController < ApplicationController
   end
 
   def show
-    @attestations = @registration.attestations
   end
 
   def new

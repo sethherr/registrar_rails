@@ -17,6 +17,7 @@ class Attestation < ApplicationRecord
   belongs_to :registration
   belongs_to :user
   belongs_to :ownership
+  has_many :attestation_images, dependent: :destroy
 
   validates_presence_of :registration_id, :kind
 
