@@ -1,68 +1,42 @@
 # frozen_string_literal: true
 
-class RegistrationsController < ApplicationController
-  before_action :redirect_to_signup_unless_user_present!, except: %i[index show]
-  before_action :find_registration, except: %i[index new create]
-  before_action :authorize_registration_for_user!, except: %i[index new create]
+class AttestationsController < ApplicationController
+  before_action :redirect_to_signup_unless_user_present!
+  before_action :find_registration, except: %i[index show]
+  before_action :authorize_registration_for_user!, except: %i[index show]
 
   def index
-    page = params[:page] || 1
-    per_page = params[:per_page] || 100
-    @registrations = available_registrations.reorder(created_at: :desc).page(page).per(per_page)
+    redirect_to user_root_path and return
   end
 
   def show
+    redirect_to user_root_path and return
   end
 
   def new
-    @registration ||= Registration.new(status: "registered")
+    @attestation ||= Attestation.new(registration_id: @registration.id)
   end
 
   def create
-    @registration = Registration.new(permitted_params)
-    if @registration.save
-      Ownership.create_for(@registration, creator: current_user, owner: current_user)
-      @registration.reload
-      flash[:success] = "Created new registration"
+    @attestation = Attestation.new(permitted_params)
+    if @attestation.save
+      flash[:success] = "Recorded attestation"
       redirect_to registration_path(@registration.to_param)
     else
-      flash[:error] = "Unable to create registration"
+      flash[:error] = "Unable to record attestation"
       render :new
-    end
-  end
-
-  def edit; end
-
-  def update
-    if @registration.update(permitted_params)
-      if new_owner_params[:new_owner].present?
-        @registration.transfer_ownership(creator: current_user,
-                                         new_owner: new_owner_params[:new_owner],
-                                         new_owner_kind: new_owner_params[:new_owner_kind])
-        flash[:success] = "Registration send to #{new_owner_params[:new_owner]}"
-        redirect_to account_path
-      else
-        flash[:success] = "Registration updated"
-        redirect_to registration_path(@registration)
-      end
-    else
-      render :edit
     end
   end
 
   private
 
   def permitted_params
-    params.require(:registration).permit(:title, :description, :main_category_tag,
-                                         :manufacturer_tag, :tags_list, :status)
-  end
-
-  def new_owner_params
-    params.require(:registration).permit(:new_owner, :new_owner_kind)
+    params.require(:attestation).permit(:title, :description, :kind)
+          .merge(authorizer: "authorizer_owner", user: current_user, registration_id: @registration.id)
   end
 
   def find_registration
-    @registration ||= available_registrations.friendly_find(params[:id])
+    @registration ||= available_registrations.friendly_find(params.dig(:attestation, :registration_id) || params[:registration_id])
   end
 
   def available_registrations

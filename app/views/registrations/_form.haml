@@ -1,5 +1,5 @@
 - new_registration_page = ["new", "create"].include?(params[:action])
-= form_for @registration, url: { action: new_registration_page ? "create" : "update"  } do |f|
+= form_for @registration, url: { action: new_registration_page ? "create" : "update" } do |f|
   - if @registration.errors.any?
     = render partial: "/shared/errors", locals: { name: "Registration", obj: @registration }
   .row

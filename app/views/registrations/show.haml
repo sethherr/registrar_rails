@@ -74,7 +74,7 @@
                   - elsif attestation.authorizer_globalid?
                     %em GlobaliD
               %td
-                = attestation.kind.gsub(/_attestation/, "").titleize.strip
+                = attestation.kind.gsub(/_attestation/, "").titleize
               %td
                 = attestation.title
                 - if attestation.description.present?
