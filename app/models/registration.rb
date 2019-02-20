@@ -19,6 +19,7 @@ class Registration < ApplicationRecord
   has_many :ownerships, dependent: :destroy
   has_many :attestations, dependent: :destroy
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
+  accepts_nested_attributes_for :registration_images, allow_destroy: true
 
   enum status: STATUS_ENUM
 

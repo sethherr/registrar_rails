@@ -40,7 +40,7 @@ class RegistrationsController < ApplicationController
         @registration.transfer_ownership(creator: current_user,
                                          new_owner: new_owner_params[:new_owner],
                                          new_owner_kind: new_owner_params[:new_owner_kind])
-        flash[:success] = "Registration send to #{new_owner_params[:new_owner]}"
+        flash[:success] = "Registration sent to #{new_owner_params[:new_owner]}"
         redirect_to account_path
       else
         flash[:success] = "Registration updated"
