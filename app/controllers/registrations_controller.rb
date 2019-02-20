@@ -56,6 +56,16 @@ class RegistrationsController < ApplicationController
   def permitted_params
     params.require(:registration).permit(:title, :description, :main_category_tag,
                                          :manufacturer_tag, :tags_list, :status)
+          .merge(non_empty_image_params)
+  end
+
+  def non_empty_image_params
+    # Recreate the public images attributes, but without empty images
+    return {} unless permitted_images_hash.present?
+    {
+      registration_images_attributes: permitted_images_hash[:public_images_attributes]
+        .select { |_k, v| v[:image].present? || v[:id].present? }
+    }
   end
 
   def new_owner_params
