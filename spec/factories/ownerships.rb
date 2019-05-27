@@ -9,7 +9,7 @@ FactoryBot.define do
     user { FactoryBot.create(:user) }
     started_at { Time.now }
     after(:create) do |ownership, evaluator|
-      unless evaluator.skip_attestation
+      unless evaluator.skip_registration_log
         FactoryBot.create(:registration_log_ownership, registration: ownership.registration,
                                                        ownership: ownership,
                                                        user: ownership.user)

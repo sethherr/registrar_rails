@@ -22,8 +22,8 @@ RSpec.describe base_url, type: :request do
     let(:tag_manufacturer) { FactoryBot.create(:tag_manufacturer) }
     describe "/" do
       let!(:registration) { FactoryBot.create(:registration_with_current_owner, user: user, main_category_tag: tag_main.name, manufacturer_tag: tag_manufacturer.name.upcase) }
-      let(:attestation_ownership) { registration.current_ownership }
-      let(:attestation_target) { { recorded_at: attestation_ownership.created_at.to_i, kind: "ownership", title: nil, description: nil, authorizer: "owner" } }
+      let(:registration_log_ownership) { registration.current_ownership }
+      let(:registration_log_target) { { recorded_at: registration_log_ownership.created_at.to_i, kind: "ownership", title: nil, description: nil, authorizer: "owner" } }
       let(:target) do
         {
           id: registration.to_param,
@@ -35,7 +35,7 @@ RSpec.describe base_url, type: :request do
           status: "registered",
           tags_list: [],
           images: [],
-          attestations: [attestation_target]
+          registration_logs: [registration_log_target]
         }
       end
       it "responds" do
@@ -66,7 +66,7 @@ RSpec.describe base_url, type: :request do
         end.to change(Registration, :count).by 1
         registration = Registration.last
 
-        matched_result = json_result["registration"].except(:registered_at, :attestations, :tags_list, :manufacturer)
+        matched_result = json_result["registration"].except(:registered_at, :registration_logs, :tags_list, :manufacturer)
         expect(matched_result).to eq valid_params.except(:tags_list, :manufacturer).merge(id: registration.to_param, images: []).as_json
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         expect(registration.tags_list).to eq valid_params[:tags_list].split(",").map(&:strip) # separate because array
@@ -80,11 +80,11 @@ RSpec.describe base_url, type: :request do
         expect(ownership.user).to eq user
         expect(ownership.authorizer).to eq "authorizer_owner"
         expect(ownership.current?).to be_truthy
-        expect(registration.attestations.count).to eq 1
-        attestation = registration.attestations.first
-        expect(attestation.user).to eq user
-        expect(attestation.ownership_attestation?).to be_truthy
-        expect(user.attestations).to eq([attestation])
+        expect(registration.registration_logs.count).to eq 1
+        registration_log = registration.registration_logs.first
+        expect(registration_log.user).to eq user
+        expect(registration_log.ownership_log?).to be_truthy
+        expect(user.registration_logs).to eq([registration_log])
       end
     end
   end

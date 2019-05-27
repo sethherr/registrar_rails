@@ -21,7 +21,7 @@ RSpec.describe Ownership, type: :model do
         expect(ownership.valid?).to be_truthy
         expect(ownership.registration_logs.count).to eq 1
         registration_log = ownership.registration_logs.first
-        expect(registration_log.kind).to eq "ownership_registration_log"
+        expect(registration_log.kind).to eq "ownership_log"
         expect(ownership.registration).to be_present
         expect(registration_log.registration).to eq ownership.registration
         expect(registration_log.ownership).to eq ownership
@@ -33,7 +33,7 @@ RSpec.describe Ownership, type: :model do
       let(:registration_log) { FactoryBot.create(:registration_log_ownership) }
       it "creates the associations correctly" do
         expect(registration_log.valid?).to be_truthy
-        expect(registration_log.kind).to eq "ownership_registration_log"
+        expect(registration_log.kind).to eq "ownership_log"
         expect(registration_log.ownership).to be_present
         expect(registration_log.registration).to be_present
         ownership = registration_log.ownership
