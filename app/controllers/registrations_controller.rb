@@ -12,7 +12,7 @@ class RegistrationsController < ApplicationController
   end
 
   def show
-    @attestations = @registration.attestations.reorder(created_at: :desc)
+    @registration_logs = @registration.registration_logs.reorder(created_at: :desc)
   end
 
   def new

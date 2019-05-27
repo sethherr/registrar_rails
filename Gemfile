@@ -5,8 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "2.5.1"
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails"
-gem "rails", "~> 5.2.2"
+gem "rails", "~> 5.2.3"
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search" # Full text search - e.g. admin_search in user
@@ -58,6 +57,10 @@ end
 group :development, :test do
   gem "foreman" # Process runner for local work
   gem "rspec-rails" # Test framework
+  gem "rubocop", "~> 0.67", require: false
+  gem "rubocop-daemon", "~> 0.3.1", require: false
+  gem "rubocop-performance", "~> 1.1.0", require: false
+  gem "rufo", "~> 0.6.0", require: false
   gem "factory_bot_rails" # mocking/stubbing
 end
 

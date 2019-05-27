@@ -2,5 +2,5 @@
 
 require "rails_helper"
 
-RSpec.describe Attestation, type: :model do
+RSpec.describe RegistrationLog, type: :model do
 end

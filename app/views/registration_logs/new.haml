@@ -1,18 +1,18 @@
 .admin-header
   %h1
-    Create an attestation for 
+    Create an registration_log for
     %em
       = @registration.title
 
-= form_for @attestation, url: { action: "create" } do |f|
-  - if @attestation.errors.any?
-    = render partial: "/shared/errors", locals: { name: "Attestation", obj: @attestation }
+= form_for @registration_log, url: { action: "create" } do |f|
+  - if @registration_log.errors.any?
+    = render partial: "/shared/errors", locals: { name: "registration log", obj: @registration_log }
   = f.hidden_field :registration_id
   .row
     .col-sm-6
       .form-group
         = f.label :kind
-        - kinds = [%w[Information information_attestation], %w[Appraisal appraisal_attestation], %w[Service service_record_attestation]]
+        - kinds = [%w[Information information_log], %w[Appraisal appraisal_log], %w[Service service_record_log]]
         = f.select :kind, kinds, {}, { class: "form-control" }
     .col-sm-6
       .form-group

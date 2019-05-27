@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class RegistrationImage < ApplicationRecord
-  belongs_to :registration
+class PublicImage < ApplicationRecord
+  belongs_to :imageable, polymorphic: true
 
   mount_uploader :internal_image, RegistrationImageUploader
 
   before_save :set_calculated_attributes
-  after_commit :update_registration
+  after_commit :update_imageable
 
   scope :listing_order, -> { reorder(:listing_order) }
 
@@ -20,12 +20,12 @@ class RegistrationImage < ApplicationRecord
   end
 
   def set_calculated_attributes
-    self.listing_order ||= registration.registration_images.maximum(:listing_order) || 0
+    self.listing_order ||= imageable.public_images.maximum(:listing_order) || 0
     return true if name.present?
     self.name = image_url&.split("/")&.last&.split(".")&.first || "image"
   end
 
-  def update_registration
-    registration&.update_attributes(updated_at: Time.now)
+  def update_imageable
+    imageable&.update_attributes(updated_at: Time.now)
   end
 end

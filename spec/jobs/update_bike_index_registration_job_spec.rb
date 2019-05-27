@@ -114,7 +114,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
 
         user.reload
         expect(registration.ownerships.count).to eq 1
-        expect(registration.attestations.count).to eq 1
+        expect(registration.registration_logs.count).to eq 1
         ownership = registration.current_ownership
         expect(registration.current_owner).to eq user
         expect(user.registrations.pluck(:id)).to eq([registration.id])

@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
 
   def show
     @page_title = "GlobaliD Registrar Account"
-    @registrations = current_user.current_registrations.includes(:attestations)
+    @registrations = current_user.current_registrations.includes(:registration_logs)
   end
 
   def edit; end

@@ -8,7 +8,7 @@
     %th
       Title
     %th
-      Attestations
+      Logs
   %tbody
     - registrations.each do |registration|
       %tr
@@ -25,4 +25,4 @@
           %small.less-strong
             = registration.description
         %td
-          = registration.attestations.count
+          = registration.registration_logs.count

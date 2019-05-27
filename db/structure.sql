@@ -92,77 +92,6 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: attestation_images; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attestation_images (
-    id bigint NOT NULL,
-    name character varying,
-    attestation_id bigint,
-    image text,
-    listing_order integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: attestation_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.attestation_images_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: attestation_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.attestation_images_id_seq OWNED BY public.attestation_images.id;
-
-
---
--- Name: attestations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attestations (
-    id bigint NOT NULL,
-    registration_id bigint,
-    user_id bigint,
-    ownership_id bigint,
-    kind integer,
-    authorizer integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    title character varying,
-    description text
-);
-
-
---
--- Name: attestations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.attestations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: attestations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.attestations_id_seq OWNED BY public.attestations.id;
-
-
---
 -- Name: external_registrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -235,26 +164,27 @@ ALTER SEQUENCE public.ownerships_id_seq OWNED BY public.ownerships.id;
 
 
 --
--- Name: registration_images; Type: TABLE; Schema: public; Owner: -
+-- Name: public_images; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.registration_images (
+CREATE TABLE public.public_images (
     id bigint NOT NULL,
     name character varying,
-    registration_id bigint,
     internal_image text,
     external_image json,
     listing_order integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    imageable_type character varying,
+    imageable_id bigint
 );
 
 
 --
--- Name: registration_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: public_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.registration_images_id_seq
+CREATE SEQUENCE public.public_images_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -263,10 +193,47 @@ CREATE SEQUENCE public.registration_images_id_seq
 
 
 --
--- Name: registration_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: public_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.registration_images_id_seq OWNED BY public.registration_images.id;
+ALTER SEQUENCE public.public_images_id_seq OWNED BY public.public_images.id;
+
+
+--
+-- Name: registration_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.registration_logs (
+    id bigint NOT NULL,
+    registration_id bigint,
+    user_id bigint,
+    ownership_id bigint,
+    kind integer,
+    authorizer integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    title character varying,
+    description text
+);
+
+
+--
+-- Name: registration_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.registration_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registration_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.registration_logs_id_seq OWNED BY public.registration_logs.id;
 
 
 --
@@ -466,20 +433,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: attestation_images id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attestation_images ALTER COLUMN id SET DEFAULT nextval('public.attestation_images_id_seq'::regclass);
-
-
---
--- Name: attestations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attestations ALTER COLUMN id SET DEFAULT nextval('public.attestations_id_seq'::regclass);
-
-
---
 -- Name: external_registrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -494,10 +447,17 @@ ALTER TABLE ONLY public.ownerships ALTER COLUMN id SET DEFAULT nextval('public.o
 
 
 --
--- Name: registration_images id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: public_images id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.registration_images ALTER COLUMN id SET DEFAULT nextval('public.registration_images_id_seq'::regclass);
+ALTER TABLE ONLY public.public_images ALTER COLUMN id SET DEFAULT nextval('public.public_images_id_seq'::regclass);
+
+
+--
+-- Name: registration_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_logs ALTER COLUMN id SET DEFAULT nextval('public.registration_logs_id_seq'::regclass);
 
 
 --
@@ -544,22 +504,6 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: attestation_images attestation_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attestation_images
-    ADD CONSTRAINT attestation_images_pkey PRIMARY KEY (id);
-
-
---
--- Name: attestations attestations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attestations
-    ADD CONSTRAINT attestations_pkey PRIMARY KEY (id);
-
-
---
 -- Name: external_registrations external_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -576,11 +520,19 @@ ALTER TABLE ONLY public.ownerships
 
 
 --
--- Name: registration_images registration_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: public_images public_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.registration_images
-    ADD CONSTRAINT registration_images_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.public_images
+    ADD CONSTRAINT public_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registration_logs registration_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registration_logs
+    ADD CONSTRAINT registration_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -632,34 +584,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_attestation_images_on_attestation_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_attestation_images_on_attestation_id ON public.attestation_images USING btree (attestation_id);
-
-
---
--- Name: index_attestations_on_ownership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_attestations_on_ownership_id ON public.attestations USING btree (ownership_id);
-
-
---
--- Name: index_attestations_on_registration_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_attestations_on_registration_id ON public.attestations USING btree (registration_id);
-
-
---
--- Name: index_attestations_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_attestations_on_user_id ON public.attestations USING btree (user_id);
-
-
---
 -- Name: index_external_registrations_on_registration_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -681,10 +605,31 @@ CREATE INDEX index_ownerships_on_user_id ON public.ownerships USING btree (user_
 
 
 --
--- Name: index_registration_images_on_registration_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_public_images_on_imageable_type_and_imageable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_registration_images_on_registration_id ON public.registration_images USING btree (registration_id);
+CREATE INDEX index_public_images_on_imageable_type_and_imageable_id ON public.public_images USING btree (imageable_type, imageable_id);
+
+
+--
+-- Name: index_registration_logs_on_ownership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_logs_on_ownership_id ON public.registration_logs USING btree (ownership_id);
+
+
+--
+-- Name: index_registration_logs_on_registration_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_logs_on_registration_id ON public.registration_logs USING btree (registration_id);
+
+
+--
+-- Name: index_registration_logs_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registration_logs_on_user_id ON public.registration_logs USING btree (user_id);
 
 
 --
@@ -773,6 +718,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190214214825'),
 ('20190218210702'),
 ('20190219193533'),
-('20190219194700');
+('20190219194700'),
+('20190527185828');
 
 
