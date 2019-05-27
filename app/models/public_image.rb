@@ -3,7 +3,7 @@
 class PublicImage < ApplicationRecord
   belongs_to :imageable, polymorphic: true
 
-  mount_uploader :internal_image, RegistrationImageUploader
+  mount_uploader :internal_image, PublicImageUploader
 
   before_save :set_calculated_attributes
   after_commit :update_imageable

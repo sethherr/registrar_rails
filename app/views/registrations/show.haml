@@ -33,9 +33,9 @@
           %td
             = @registration.tags_list.join(", ")
   .col-6
-    .registration-images
+    .public-images
       .row
-        - @registration.registration_images.each do |image|
+        - @registration.public_images.each do |image|
           .col-4
             = link_to image.image_url do
               = image_tag(image.image_url(:small))

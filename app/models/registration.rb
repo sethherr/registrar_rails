@@ -84,7 +84,7 @@ class Registration < ApplicationRecord
 
   def set_calculated_attributes
     self.status = external_registrations.first.status if external_registrations.any?
-    self.thumb_url = public_images.listing_order.first&.image_url(:small)
+    self.thumb_url = public_images.listing_order.first.image_url(:small) if public_images.any?
     # Use registration tags here because they haven't been assigned yet. Laborious n+1 search because nothing else works
     self.manufacturer_id ||= registration_tags.select { |rt| rt.tag.manufacturer? }.first&.tag_id
     self.main_category_id ||= registration_tags.select { |rt| rt.tag.main_category? }.first&.tag_id
