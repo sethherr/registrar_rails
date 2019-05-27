@@ -24,8 +24,12 @@ class UpdateBikeIndexRegistrationJob < ApplicationJob
   end
 
   def create_missing_photos(registration, public_images)
+    registration
     (public_images || []).each_with_index do |public_image, index|
-      next if registration.public_images.any? { |ri| ri.image_url == public_image["full"] }
+      pp registration.public_images.listing_ordered
+      next if registration.public_images.any? do |pi|
+        pi.image_url == public_image["full"]
+      end
       registration.public_images.create(name: public_image["name"],
                                               listing_order: index,
                                               external_image: {
