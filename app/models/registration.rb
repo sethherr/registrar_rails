@@ -6,18 +6,18 @@ class Registration < ApplicationRecord
     for_sale: 1,
     rented: 2,
     missing: 3,
-    expired: 4
+    expired: 4,
   }.freeze
 
   belongs_to :main_category, class_name: "Tag"
   belongs_to :manufacturer, class_name: "Tag"
   belongs_to :current_owner, class_name: "User"
   has_many :external_registrations, dependent: :destroy
-  has_many :registration_images, dependent: :destroy
+  has_many :public_images, as: :imageable, dependent: :destroy
   has_many :registration_tags, dependent: :destroy
   has_many :tags, through: :registration_tags
   has_many :ownerships, dependent: :destroy
-  has_many :attestations, dependent: :destroy
+  has_many :registration_logs, dependent: :destroy
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
 
   enum status: STATUS_ENUM
@@ -84,7 +84,7 @@ class Registration < ApplicationRecord
 
   def set_calculated_attributes
     self.status = external_registrations.first.status if external_registrations.any?
-    self.thumb_url = registration_images.listing_order.first&.image_url(:small)
+    self.thumb_url = public_images.listing_order.first&.image_url(:small)
     # Use registration tags here because they haven't been assigned yet. Laborious n+1 search because nothing else works
     self.manufacturer_id ||= registration_tags.select { |rt| rt.tag.manufacturer? }.first&.tag_id
     self.main_category_id ||= registration_tags.select { |rt| rt.tag.main_category? }.first&.tag_id

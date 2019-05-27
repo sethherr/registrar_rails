@@ -12,7 +12,7 @@ class Ownership < ApplicationRecord
   }.freeze
 
   belongs_to :registration
-  has_many :attestations
+  has_many :registration_logs
   belongs_to :user
 
   scope :current, -> { where.not(started_at: nil).where(ended_at: nil) }
@@ -31,11 +31,11 @@ class Ownership < ApplicationRecord
                        initial_owner_kind: initial_owner_kind,
                        owner: owner,
                        started_at: Time.now)
-    Attestation.create(registration: registration,
-                       user: creator.is_a?(User) ? creator : nil,
-                       ownership: ownership,
-                       authorizer: authorizer_for_creator(creator),
-                       kind: "ownership_attestation")
+    RegistrationLog.create(registration: registration,
+                           user: creator.is_a?(User) ? creator : nil,
+                           ownership: ownership,
+                           authorizer: authorizer_for_creator(creator),
+                           kind: "ownership_log")
     previous_ownership&.mark_no_longer_current
     ownership
   end
@@ -52,7 +52,7 @@ class Ownership < ApplicationRecord
 
   def previous?; started_at.present? && ended_at.present? end
 
-  def authorizer; attestations.reorder(:id).first&.authorizer end
+  def authorizer; registration_logs.reorder(:id).first&.authorizer end
 
   def email
     @email ||= user&.email
@@ -75,7 +75,7 @@ class Ownership < ApplicationRecord
     end
   end
 
-  # Eventually, we may want to add an attestation here too
+  # Eventually, we may want to add an registration_log here too
   def mark_no_longer_current
     update_attributes(ended_at: Time.now)
   end

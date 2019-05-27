@@ -33,9 +33,9 @@
           %td
             = @registration.tags_list.join(", ")
   .col-6
-    .registration-images
+    .public-images
       .row
-        - @registration.registration_images.each do |image|
+        - @registration.public_images.each do |image|
           .col-4
             = link_to image.image_url do
               = image_tag(image.image_url(:small))
@@ -44,11 +44,11 @@
   .card-body
     .card-title
       %h4
-        Attestations
+        registration_logs
         %small.float-right
-          = link_to "new attestation", new_attestation_path(registration_id: @registration), class: "btn btn-success"
+          = link_to "new log", new_registration_log_path(registration_id: @registration), class: "btn btn-success"
     .card-text.mt-4
-      %table.table.table-striped.attestations-table
+      %table.table.table-striped.registration_logs-table
         %thead
           %th
             Recorded
@@ -59,31 +59,31 @@
           %th
             Images
         %tbody
-          - @attestations.each do |attestation|
+          - @registration_logs.each do |registration_log|
             %tr
               %td
                 %span.convertTime
-                  = l attestation.created_at, format: :convert_time
+                  = l registration_log.created_at, format: :convert_time
                 %br
                 %small.less-strong
                   Authorized by
-                  - if attestation.authorizer_owner?
+                  - if registration_log.authorizer_owner?
                     %em owner
-                  - elsif attestation.authorizer_bike_index?
+                  - elsif registration_log.authorizer_bike_index?
                     %em Bike Index
-                  - elsif attestation.authorizer_globalid?
+                  - elsif registration_log.authorizer_globalid?
                     %em GlobaliD
               %td
-                = attestation.kind_display.titleize
+                = registration_log.kind_display.titleize
               %td
-                = attestation.title
-                - if attestation.description.present?
+                = registration_log.title
+                - if registration_log.description.present?
                   %br
                   %small.less-strong
-                    = attestation.description
+                    = registration_log.description
               %td
                 .row
-                  - attestation.attestation_images.each do |image|
+                  - registration_log.public_images.each do |image|
                     .col-4
                       = link_to image.image_url do
                         = image_tag(image.image_url(:small))

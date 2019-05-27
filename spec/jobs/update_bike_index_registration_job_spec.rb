@@ -48,17 +48,17 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
           small: "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
         }.deep_stringify_keys
       end
-      let!(:registration_image) do
-        FactoryBot.create(:registration_image, name: "some other name",
+      let!(:public_image) do
+        FactoryBot.create(:public_image, name: "some other name",
                                                external_image: external_image,
-                                               registration: registration)
+                                               imageable: registration)
       end
       let!(:ownership) { FactoryBot.create(:ownership, registration: registration) }
       it "adds the registration data we expect, overrides manufacturer_tag, doesn't create a new ownership" do
         external_registration.reload
         expect(external_registration.external_data).to eq({})
         expect(external_registration.external_data_at).to be_within(1.seconds).of og_time
-        expect(registration.registration_images.pluck(:id).include?(registration_image.id)).to be_truthy
+        expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
         expect(ownership.current?).to be_truthy
         expect(registration.current_ownership).to eq(ownership)
         VCR.use_cassette("update_bike_index_registration_job-fetch_kona") do
@@ -73,10 +73,10 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
         expect(registration.updated_at).to be_within(1.seconds).of Time.now
         expect(registration.status).to eq "registered"
-        expect(registration.registration_images.pluck(:id).include?(registration_image.id)).to be_truthy
-        expect(registration.registration_images.count).to eq 4
-        expect(registration_image.listing_order).to eq 0
-        expect(registration.thumb_url).to eq "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
+        expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
+        expect(registration.public_images.count).to eq 4
+        expect(public_image.listing_order).to eq 0
+        expect(registration.thumb_url).to eq "https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG"
         expect(registration.main_category_tag).to eq "Bicycle"
         expect(registration.manufacturer_tag).to eq "KKONA"
         expect(registration.description).to eq "Some cool other thing"
@@ -102,19 +102,19 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         expect(external_registration.external_data).to eq target_data
         expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
 
-        expect(registration.registration_images.count).to eq 1
-        registration_image = registration.registration_images.first
-        expect(registration_image.internal_image).to be_blank
-        expect(registration_image.name).to eq "2018 Trek Red"
-        expect(registration_image.listing_order).to eq 0
+        expect(registration.public_images.count).to eq 1
+        public_image = registration.public_images.first
+        expect(public_image.internal_image).to be_blank
+        expect(public_image.name).to eq "2018 Trek Red"
+        expect(public_image.listing_order).to eq 0
         expect(registration.thumb_url).to eq target_image_url_small
-        expect(registration_image.image_url).to eq target_image_url
-        expect(registration_image.image_url(:small)).to eq target_image_url_small
-        expect(registration_image.image_url(:large)).to eq target_image_url_large
+        expect(public_image.image_url).to eq target_image_url
+        expect(public_image.image_url(:small)).to eq target_image_url_small
+        expect(public_image.image_url(:large)).to eq target_image_url_large
 
         user.reload
         expect(registration.ownerships.count).to eq 1
-        expect(registration.attestations.count).to eq 1
+        expect(registration.registration_logs.count).to eq 1
         ownership = registration.current_ownership
         expect(registration.current_owner).to eq user
         expect(user.registrations.pluck(:id)).to eq([registration.id])

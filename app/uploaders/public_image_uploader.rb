@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RegistrationImageUploader < CarrierWave::Uploader::Base
+class PublicImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
   PLACEHOLDER_URL = "https://files.bikeindex.org/blank.png"
