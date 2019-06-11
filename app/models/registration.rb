@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Registration < ApplicationRecord
+  include Uuidable
   STATUS_ENUM = {
     registered: 0,
     for_sale: 1,
@@ -19,29 +20,19 @@ class Registration < ApplicationRecord
   has_many :ownerships, dependent: :destroy
   has_many :registration_logs, dependent: :destroy
   accepts_nested_attributes_for :registration_tags, allow_destroy: true
+  accepts_nested_attributes_for :public_images, allow_destroy: true
 
   enum status: STATUS_ENUM
 
   before_save :set_calculated_attributes
 
-  attr_accessor :new_owner, :new_owner_kind
+  attr_accessor :new_owner, :new_owner_kindee
 
   def self.statuses; STATUS_ENUM.keys.map(&:to_s) end
 
   def self.lookup_external_id(provider, id)
     ExternalRegistration.lookup_external_id(provider, id)&.registration
   end
-
-  def self.integer_id?(str)
-    str.is_a?(Integer) || str.match(/\A\d*\z/).present?
-  end
-
-  def self.friendly_find(id_or_uuid)
-    return nil unless id_or_uuid.present?
-    integer_id?(id_or_uuid) ? find_by_id(id_or_uuid) : find_by_uuid(id_or_uuid)
-  end
-
-  def to_param; uuid end
 
   def current_ownership; ownerships.current.reorder(:id).last end
 

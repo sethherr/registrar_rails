@@ -176,7 +176,9 @@ CREATE TABLE public.public_images (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     imageable_type character varying,
-    imageable_id bigint
+    imageable_id bigint,
+    private_image boolean DEFAULT false,
+    uuid uuid DEFAULT public.uuid_generate_v4()
 );
 
 
@@ -213,7 +215,8 @@ CREATE TABLE public.registration_logs (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     title character varying,
-    description text
+    description text,
+    uuid uuid DEFAULT public.uuid_generate_v4()
 );
 
 
@@ -719,6 +722,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190218210702'),
 ('20190219193533'),
 ('20190219194700'),
-('20190527185828');
+('20190527185828'),
+('20190611181447'),
+('20190611184406');
 
 

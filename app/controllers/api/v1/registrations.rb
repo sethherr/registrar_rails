@@ -3,12 +3,25 @@
 class API::V1::Registrations < API::Base
   resource :registrations do
     helpers do
+      def current_registration
+        @current_registration ||= current_user.registrations.find(params[:registration_id] || params[:id])
+      end
+
       def registrations
         @page = params[:page] || 1
         @per_page = params[:per_page] || 50
         @paginated_obj = current_user.registrations.order(id: :desc).page(@page).per(@per_page)
         ActiveModel::ArraySerializer.new(@paginated_obj,
                                          each_serializer: RegistrationSerializer,
+                                         root: false).as_json
+      end
+
+      def registration_logs
+        @page = params[:page] || 1
+        @per_page = params[:per_page] || 50
+        @paginated_obj = registration_logs.order(id: :desc).page(@page).per(@per_page)
+        ActiveModel::ArraySerializer.new(@paginated_obj,
+                                         each_serializer: RegistrationLogSerializer,
                                          root: false).as_json
       end
     end
@@ -20,7 +33,7 @@ class API::V1::Registrations < API::Base
     get "/" do
       {
         registrations: registrations,
-        links: paginate("registrations")
+        links: paginate("registrations"),
       }
     end
 
@@ -44,6 +57,17 @@ class API::V1::Registrations < API::Base
       else
         error!({ error: registration.errors.full_messages.to_sentence }, 400)
       end
+    end
+
+    desc "registrations logs"
+    params do
+      requires :registration_id, type: String
+    end
+    get "/:registration_id/logs" do
+      {
+        registrations: registrations,
+        links: paginate("registration_logs"),
+      }
     end
   end
 end

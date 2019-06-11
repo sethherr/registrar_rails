@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RegistrationLog < ApplicationRecord
+  include Uuidable
   KIND_ENUM = {
     ownership_log: 0,
     appraisal_log: 1,
