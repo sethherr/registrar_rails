@@ -13,7 +13,7 @@
     - registrations.each do |registration|
       %tr
         %td
-          = image_tag registration.thumb_url.present? ? registration.thumb_url : RegistrationImageUploader::PLACEHOLDER_URL
+          = image_tag registration.thumb_url.present? ? registration.thumb_url : PublicImageUploader::PLACEHOLDER_URL
         %td
           %a.convertTime{ href: registration_path(registration.to_param) }
             = l registration.created_at, format: :convert_time
