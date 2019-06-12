@@ -26,7 +26,7 @@ class Registration < ApplicationRecord
 
   before_save :set_calculated_attributes
 
-  attr_accessor :new_owner, :new_owner_kindee
+  attr_accessor :new_owner, :new_owner_kind
 
   def self.statuses; STATUS_ENUM.keys.map(&:to_s) end
 
