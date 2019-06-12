@@ -51,7 +51,10 @@ RSpec.describe base_url, type: :request do
         registration.reload
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         get base_url, headers: authorization_headers
-        expect(json_result["registrations"]).to eq([target.as_json])
+        expect(json_result["registrations"].count).to eq 1
+        json_registration_result = json_result["registrations"].first
+        expect(json_registration_result.except("logs")).to eq target.except(:logs).as_json
+        expect(json_registration_result["logs"]).to eq([registration_log_target.as_json])
         expect(json_result["links"]).to eq target_links(base_url) # In request_spec_helpers
         expect(response.code).to eq("200")
       end
@@ -76,7 +79,7 @@ RSpec.describe base_url, type: :request do
         registration = Registration.last
 
         matched_result = json_result["registration"].except(:registered_at, :registration_logs, :tags_list, :manufacturer)
-        expect(matched_result).to eq valid_params.except(:tags_list, :manufacturer).merge(id: registration.to_param, images: []).as_json
+        expect(matched_result.except("logs")).to eq valid_params.except(:tags_list, :manufacturer).merge(id: registration.to_param, images: []).as_json
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         expect(registration.tags_list).to eq valid_params[:tags_list].split(",").map(&:strip) # separate because array
 
