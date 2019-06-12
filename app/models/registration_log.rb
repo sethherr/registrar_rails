@@ -23,7 +23,7 @@ class RegistrationLog < ApplicationRecord
   enum kind: KIND_ENUM
   enum authorizer: AUTHORIZER_ENUM
 
-  def kind_display
-    kind&.gsub(/_log/, "")
-  end
+  def kind_display; kind&.gsub(/_log/, "") end
+
+  def authorizer_display; authorizer&.gsub("authorizer_", "") end
 end

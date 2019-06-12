@@ -16,9 +16,9 @@ module Uuidable
 
   def to_param
     return uuid if uuid.present?
+    return nil unless id.present?
     # Because it's generated after creation, fallback to grab it
     # TODO: Make this less of a gross hack!
     self.uuid = self.class.where(id: id).pluck(:uuid).first
-    # uuid
   end
 end

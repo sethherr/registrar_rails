@@ -22,7 +22,7 @@ class RegistrationSerializer < ApplicationSerializer
   def logs
     ActiveModel::ArraySerializer.new(object.registration_logs.order(id: :desc).limit(5),
                                      each_serializer: RegistrationLogSerializer,
-                                     root: false)
+                                     root: false).as_json
   end
 
   def images

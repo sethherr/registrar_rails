@@ -11,7 +11,11 @@ class RegistrationLogSerializer < ApplicationSerializer
     object.created_at.to_i
   end
 
+  def kind
+    object.kind_display
+  end
+
   def authorizer
-    object.authorizer&.gsub("authorizer_", "")
+    object.authorizer_display
   end
 end

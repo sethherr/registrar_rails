@@ -22,13 +22,12 @@ RSpec.describe base_url, type: :request do
     let(:tag_manufacturer) { FactoryBot.create(:tag_manufacturer) }
     describe "/" do
       let!(:registration) { FactoryBot.create(:registration_with_current_owner, user: user, main_category_tag: tag_main.name, manufacturer_tag: tag_manufacturer.name.upcase) }
-      let(:registration_log_ownership) { registration.current_ownership }
+      let(:registration_log_ownership) { registration.registration_logs.first }
       let(:registration_log_target) do
         {
           id: registration_log_ownership.to_param,
           created_at: registration_log_ownership.created_at.to_i,
           kind: "ownership",
-          title: nil,
           description: nil,
           authorizer: "owner",
         }
@@ -51,10 +50,8 @@ RSpec.describe base_url, type: :request do
         registration.reload
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         get base_url, headers: authorization_headers
-        expect(json_result["registrations"].count).to eq 1
-        json_registration_result = json_result["registrations"].first
-        expect(json_registration_result.except("logs")).to eq target.except(:logs).as_json
-        expect(json_registration_result["logs"]).to eq([registration_log_target.as_json])
+        # Because the registration logs don't match :/ - can't do expect(json_result["registrations"]).to eq([target.as_json])
+        expect(json_result["registrations"]).to eq([target.as_json])
         expect(json_result["links"]).to eq target_links(base_url) # In request_spec_helpers
         expect(response.code).to eq("200")
       end
