@@ -18,7 +18,7 @@ module Uuidable
     return uuid if uuid.present?
     # Because it's generated after creation, fallback to grab it
     # TODO: Make this less of a gross hack!
-    reload if id.present?
-    uuid
+    self.uuid = self.class.where(id: id).pluck(:uuid).first
+    # uuid
   end
 end

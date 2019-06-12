@@ -192,7 +192,7 @@ CREATE TABLE public.public_images (
     imageable_type character varying,
     imageable_id bigint,
     private_image boolean DEFAULT false,
-    uuid uuid DEFAULT public.uuid_generate_v4()
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -230,7 +230,7 @@ CREATE TABLE public.registration_logs (
     updated_at timestamp without time zone NOT NULL,
     title character varying,
     description text,
-    uuid uuid DEFAULT public.uuid_generate_v4()
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -300,7 +300,7 @@ CREATE TABLE public.registrations (
     updated_at timestamp without time zone NOT NULL,
     title character varying,
     current_owner_id bigint,
-    uuid uuid DEFAULT public.uuid_generate_v4()
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -738,7 +738,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190219194700'),
 ('20190527185828'),
 ('20190611181447'),
-('20190611184406'),
 ('20190612180110');
 
 
