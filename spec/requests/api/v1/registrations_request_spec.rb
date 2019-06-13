@@ -28,7 +28,7 @@ RSpec.describe base_url, type: :request do
           id: registration_log_ownership.to_param,
           created_at: registration_log_ownership.created_at.to_i,
           kind: "ownership",
-          description: nil,
+          description: "initial ownership",
           authorizer: "owner",
         }
       end

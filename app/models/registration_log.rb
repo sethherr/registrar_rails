@@ -26,4 +26,14 @@ class RegistrationLog < ApplicationRecord
   def kind_display; kind&.gsub(/_log/, "") end
 
   def authorizer_display; authorizer&.gsub("authorizer_", "") end
+
+  def description; user_description.present? ? user_description : auto_description end
+
+  def auto_description
+    if ownership_log?
+      registration.ownerships.count > 1 ? "ownership transfer" : "initial ownership"
+    else
+      "Auto"
+    end
+  end
 end

@@ -228,9 +228,9 @@ CREATE TABLE public.registration_logs (
     authorizer integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title character varying,
-    description text,
-    uuid uuid DEFAULT public.gen_random_uuid()
+    information text,
+    uuid uuid DEFAULT public.gen_random_uuid(),
+    user_description text
 );
 
 
@@ -738,6 +738,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190219194700'),
 ('20190527185828'),
 ('20190611181447'),
-('20190612180110');
+('20190612180110'),
+('20190612194613');
 
 

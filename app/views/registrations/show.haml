@@ -44,7 +44,7 @@
   .card-body
     .card-title
       %h4
-        registration_logs
+        Logs
         %small.float-right
           = link_to "new log", new_registration_log_path(registration_id: @registration), class: "btn btn-success"
     .card-text.mt-4
@@ -55,7 +55,7 @@
           %th
             Kind
           %th
-            Title
+            Description
           %th
             Images
         %tbody
@@ -76,11 +76,7 @@
               %td
                 = registration_log.kind_display.titleize
               %td
-                = registration_log.title
-                - if registration_log.description.present?
-                  %br
-                  %small.less-strong
-                    = registration_log.description
+                = registration_log.description
               %td
                 .row
                   - registration_log.public_images.each do |image|
