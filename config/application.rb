@@ -25,6 +25,9 @@ module Registrar
     # Use sql format (structure.sql) rather than ruby (schema.rb) because fancy postgres parts
     config.active_record.schema_format = :sql
 
+    # Set default timezone
+    config.time_zone = "America/Los_Angeles" # Also set in TimeParser::DEFAULT_TIMEZONE
+
     # Use sidekiq because it's awesome
     config.active_job.queue_adapter = :sidekiq
 

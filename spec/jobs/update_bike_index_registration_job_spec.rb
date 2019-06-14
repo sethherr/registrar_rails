@@ -7,7 +7,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
   let(:instance) { subject.new }
 
   describe "perform" do
-    let(:og_time) { Time.now - 4.days }
+    let(:og_time) { Time.current - 4.days }
     let(:external_id) { "432199" }
     let(:target_data) { JSON.parse(File.read(Rails.root.join("spec", "fixtures", "bike_index_kona.json"))) }
     let(:og_description) { "My favorite mountain bike. I put holes in everything" }
@@ -22,7 +22,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
       registration = external_registration.registration
       expect(registration.status).to eq "registered"
       expect(external_registration.external_data).to eq target_data
-      expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
+      expect(external_registration.external_data_at).to be_within(1.seconds).of Time.current
       expect(registration.main_category_tag).to eq "Bicycle"
       expect(registration.manufacturer_tag).to eq "Kona"
       expect(registration.description).to eq "My favorite mountain bike. I put holes in everything"
@@ -45,13 +45,13 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         {
           full: "https://files.bikeindex.org/uploads/Pu/136859/image.jpg",
           large: "https://files.bikeindex.org/uploads/Pu/136859/large_image.jpg",
-          small: "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg"
+          small: "https://files.bikeindex.org/uploads/Pu/136859/small_image.jpg",
         }.deep_stringify_keys
       end
       let!(:public_image) do
         FactoryBot.create(:public_image, name: "some other name",
-                                               external_image: external_image,
-                                               imageable: registration)
+                                         external_image: external_image,
+                                         imageable: registration)
       end
       let!(:ownership) { FactoryBot.create(:ownership, registration: registration) }
       it "adds the registration data we expect, overrides manufacturer_tag, doesn't create a new ownership" do
@@ -70,8 +70,8 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         expect(ownership.current?).to be_truthy
         expect(registration.current_ownership).to eq(ownership)
         expect(external_registration.external_data).to eq target_data
-        expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
-        expect(registration.updated_at).to be_within(1.seconds).of Time.now
+        expect(external_registration.external_data_at).to be_within(1.seconds).of Time.current
+        expect(registration.updated_at).to be_within(1.seconds).of Time.current
         expect(registration.status).to eq "registered"
         expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
         expect(registration.public_images.count).to eq 4
@@ -100,7 +100,7 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
         registration = external_registration.registration
         expect(registration.status).to eq "missing"
         expect(external_registration.external_data).to eq target_data
-        expect(external_registration.external_data_at).to be_within(1.seconds).of Time.now
+        expect(external_registration.external_data_at).to be_within(1.seconds).of Time.current
 
         expect(registration.public_images.count).to eq 1
         public_image = registration.public_images.first
