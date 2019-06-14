@@ -25,10 +25,11 @@ group :red_green_refactor, halt_on_fail: true do
     watch(rails.controllers) { |m| rspec.spec.("requests/#{m[1]}_request") }
 
     # Rails config changes
-    watch(rails.spec_helper)     { rspec.spec_dir }
-    watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
-    watch(rails.app_controller)  { "#{rspec.spec_dir}/requests" }
+    watch(rails.spec_helper) { rspec.spec_dir }
+    watch(rails.routes) { "#{rspec.spec_dir}/routing" }
+    watch(rails.app_controller) { "#{rspec.spec_dir}/requests" }
     watch(%r{^app/integrations/(.+)\.rb$}) { |m| "#{rspec.spec_dir}/integrations/#{m[1]}_spec.rb" }
+    watch(%r{^app/services/(.+)\.rb$}) { |m| "#{rspec.spec_dir}/services/#{m[1]}_spec.rb" }
   end
 
   guard :rubocop, all_on_start: false do

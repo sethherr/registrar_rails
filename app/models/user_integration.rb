@@ -32,6 +32,6 @@ class UserIntegration < ApplicationRecord
   end
 
   def update_user
-    user&.update_attributes(updated_at: Time.now)
+    user&.update_attributes(updated_at: Time.current)
   end
 end
