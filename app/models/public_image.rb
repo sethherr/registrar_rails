@@ -26,6 +26,6 @@ class PublicImage < ApplicationRecord
   end
 
   def update_imageable
-    imageable&.update_attributes(updated_at: Time.now)
+    imageable&.update_attributes(updated_at: Time.current)
   end
 end

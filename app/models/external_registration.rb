@@ -3,7 +3,7 @@
 class ExternalRegistration < ApplicationRecord
   PROVIDER_ENUM = {
     globalid: 0,
-    bike_index: 1
+    bike_index: 1,
   }.freeze
 
   belongs_to :registration
@@ -40,7 +40,7 @@ class ExternalRegistration < ApplicationRecord
     registration.main_category_tag ||= main_category_tag if main_category_tag.present?
     registration.title ||= title if title.present?
     registration.description ||= description if description.present?
-    registration&.update_attributes(updated_at: Time.now)
+    registration&.update_attributes(updated_at: Time.current)
   end
 
   def status
