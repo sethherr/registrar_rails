@@ -1,3 +1,5 @@
+directories %w(app spec lib config)
+
 group :red_green_refactor, halt_on_fail: true do
   guard :rspec, failed_mode: :focus, cmd: "bundle exec rspec" do
     require "guard/rspec/dsl"
