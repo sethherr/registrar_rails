@@ -184,15 +184,14 @@ ALTER SEQUENCE public.ownerships_id_seq OWNED BY public.ownerships.id;
 CREATE TABLE public.public_images (
     id bigint NOT NULL,
     name character varying,
-    internal_image text,
-    external_image json,
+    image text,
     listing_order integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     imageable_type character varying,
     imageable_id bigint,
-    private_image boolean DEFAULT false,
-    uuid uuid DEFAULT public.gen_random_uuid()
+    uuid uuid DEFAULT public.gen_random_uuid(),
+    external_url text
 );
 
 
@@ -739,6 +738,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190527185828'),
 ('20190611181447'),
 ('20190612180110'),
-('20190612194613');
+('20190612194613'),
+('20190619152358');
 
 

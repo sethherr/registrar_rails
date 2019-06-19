@@ -25,14 +25,10 @@ class UpdateBikeIndexRegistrationJob < ApplicationJob
 
   def create_missing_photos(registration, public_images)
     (public_images || []).each_with_index do |public_image, index|
-      next if registration.public_images.any? { |pi| pi.image_url == public_image["full"] }
+      next if registration.public_images.matching_external_url(public_image["full"]).present?
       registration.public_images.create(name: public_image["name"],
                                         listing_order: index,
-                                        external_image: {
-                                          full: public_image["full"],
-                                          large: public_image["large"],
-                                          small: public_image["thumb"],
-                                        })
+                                        remote_image_url: public_image["full"])
     end
   end
 end
