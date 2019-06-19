@@ -2,6 +2,108 @@
   %h1
     Registration
 
+.row.mt-4
+  .col-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Title
+          %td
+            = @registration.title
+        %tr
+          %td
+            Description
+          %td
+            = @registration.description
+  .col-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Owner
+          %td
+            = @registration.current_owner_calculated&.display_name
+        %tr
+          %td
+            Created
+          %td
+            %span.convertTime
+              = l @registration.created_at, format: :convert_time
+  .col-6
+    %table.table-list
+      %tbody
+        %tr
+          %td
+            Main Category
+          %td
+            = @registration.main_category_tag
+        - if @registration.maker_title.present?
+          %tr
+            %td
+              = @registration.maker_title
+            %td
+              = @registration.manufacturer_tag
+        %tr
+          %td
+            Status
+          %td
+            = @registration.status
+        %tr
+          %td
+            Tags
+          %td
+            = @registration.tags_list.join(", ")
+  .col-6
+    .public-images
+      .row
+        - @registration.public_images.each do |image|
+          .col-4.mb-4
+            = link_to image.image_url do
+              = image_tag(image.image_url(:small))
+
+%hr
+%h4
+  Logs
+%table.table.table-striped.registration_logs-table
+  %thead
+    %th
+      Recorded
+    %th
+      Kind
+    %th
+      Information
+    %th
+      Images
+  %tbody
+    - @registration_logs.each do |registration_log|
+      %tr
+        %td
+          %span.convertTime
+            = l registration_log.created_at, format: :convert_time
+          %br
+          %small.less-strong
+            Authorized by
+            - if registration_log.authorizer_owner?
+              %em owner
+            - elsif registration_log.authorizer_bike_index?
+              %em Bike Index
+            - elsif registration_log.authorizer_globalid?
+              %em GlobaliD
+        %td
+          = registration_log.kind_display.titleize
+          %small
+            = registration_log.description
+        %td
+          = registration_log.information
+        %td
+          .row
+            - registration_log.public_images.each do |image|
+              .col-4
+                = link_to image.image_url do
+                  = image_tag(image.image_url(:small))
+
+
 .mt-4
 
 - @registration.external_registrations.each do |external_registration|
