@@ -15,24 +15,21 @@ Rails.start();
 Turbolinks.start();
 
 import log from "./utils/log";
-import moment from "moment-timezone";
+import LocalizeTimes from "./utils/localize_times";
 import LoadFancySelects from "./utils/load_fancy_selects";
 import EnableFilenameForUploads from "./utils/enable_filename_for_uploads";
 import AdminBase from "./pages/admin_base.js";
 
 $(document).on("turbolinks:load", function() {
-  window.utils = new Utils();
-  utils.localizeTimes();
-  utils.enableEscapeForModals();
+  LocalizeTimes();
+  LoadFancySelects();
+  EnableFilenameForUploads();
 
   // Load the page specific things
   let body = document.getElementsByTagName("body")[0];
   let body_id = body.id;
   let is_admin = body.classList.contains("admin-body");
   let action_name = body.getAttribute("data-pageaction");
-
-  LoadFancySelects();
-  EnableFilenameForUploads();
 
   if (is_admin) {
     const adminBase = AdminBase();

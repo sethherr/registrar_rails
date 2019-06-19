@@ -13,4 +13,4 @@ const EnableFilenameForUploads = () => {
   });
 };
 
-export default enableFilenameForUploads;
+export default EnableFilenameForUploads;
