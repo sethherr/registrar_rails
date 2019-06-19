@@ -1,0 +1,12 @@
+.show.public-image-field.col-6.col-md-4.nested-fields
+  - if f.object.image.present?
+    %a{ href: f.object.image_url }
+      = image_tag(f.object.image_url(:small))
+  - else
+    = f.hidden_field :image_cache
+    .custom-file
+      = f.file_field :image, class: "custom-file-input"
+      = f.label :image, "Choose file", class: "custom-file-label"
+  .remove-control
+    = f.check_box :_destroy
+    = f.label :_destroy, 'Remove', class: 'remove_fields small'

@@ -9,6 +9,8 @@ class PublicImage < ApplicationRecord
   before_save :set_calculated_attributes
   after_commit :update_imageable
 
+  attr_accessor :internal_image_cache
+
   scope :listing_order, -> { reorder(:listing_order) }
   scope :with_external_urls, -> { where.not(external_url: nil) }
 

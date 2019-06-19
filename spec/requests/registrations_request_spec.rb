@@ -141,6 +141,30 @@ RSpec.describe "/registrations", type: :request do
         expect(registration.current_owner).to eq user
         expect(SendOwnershipCreationNotificationJob.jobs.count).to eq 0
       end
+      context "adding photos" do
+        let(:photo) { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, "spec", "fixtures", "surly_image.jpg"))) }
+        let(:valid_params) do
+          {
+            public_images_attributes: {
+              "0" => {
+                image: photo,
+                image_cache: "",
+                _destroy: "0",
+                id: nil
+              }
+            }
+          }
+        end
+        it "adds photos" do
+          registration.reload
+          expect(registration.public_images.count).to eq 0
+          put "/registrations/#{registration.to_param}", params: { registration: valid_params }
+          registration.reload
+          expect(registration.public_images.count).to eq 1
+          expect(registration.public_images.first.image_url).to be_present
+          expect(registration.thumb_url).to be_present
+        end
+      end
       context "new owner" do
         it "updates" do
           registration.reload

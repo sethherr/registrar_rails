@@ -40,7 +40,7 @@ class RegistrationsController < ApplicationController
         @registration.transfer_ownership(creator: current_user,
                                          new_owner: new_owner_params[:new_owner],
                                          new_owner_kind: new_owner_params[:new_owner_kind])
-        flash[:success] = "Registration send to #{new_owner_params[:new_owner]}"
+        flash[:success] = "Registration sent to #{new_owner_params[:new_owner]}"
         redirect_to account_path
       else
         flash[:success] = "Registration updated"
@@ -56,6 +56,20 @@ class RegistrationsController < ApplicationController
   def permitted_params
     params.require(:registration).permit(:title, :description, :main_category_tag,
                                          :manufacturer_tag, :tags_list, :status)
+          .merge(non_empty_image_params)
+  end
+
+  def non_empty_image_params
+    # Recreate the public images attributes, but without empty images
+    return {} unless permitted_images_hash.present?
+    {
+      public_images_attributes: permitted_images_hash[:public_images_attributes]
+        .select { |_k, v| v[:image].present? || v[:id].present? },
+    }
+  end
+
+  def permitted_images_hash
+    params.require(:registration).permit(public_images_attributes: %i[image description imageable remote_image_url id _destroy])
   end
 
   def new_owner_params
