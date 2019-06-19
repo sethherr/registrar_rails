@@ -34,8 +34,7 @@ class API::V1::RootV1 < API::Base
   end
 
   mount API::V1::Status
-  mount API::V1::User
-  mount API::V1::Registrations
+  mount API::V1::Account
 
   add_swagger_documentation \
     host: ENV["BASE_DOMAIN"].gsub(/https?.../, ""),

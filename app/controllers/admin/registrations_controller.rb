@@ -12,7 +12,9 @@ class Admin::RegistrationsController < Admin::BaseController
                                  .page(page).per(per_page)
   end
 
-  def show; end
+  def show
+    @registration_logs = @registration.registration_logs.reorder(created_at: :desc)
+  end
 
   private
 
@@ -21,7 +23,7 @@ class Admin::RegistrationsController < Admin::BaseController
   end
 
   def find_registration
-    @registration = Registration.where(id: params[:id]).first
+    @registration = Registration.friendly_find(params[:id])
     raise ActiveRecord::RecordNotFound unless @registration.present?
   end
 end

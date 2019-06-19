@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe "api/v1/registrations/{id}/logs", type: :request do
+RSpec.describe "api/v1/account/registrations/{id}/logs", type: :request do
   include_context :api_v1_request_spec
-  let(:base_url) { "/api/v1/registrations/#{registration.to_param}/logs" }
+  let(:base_url) { "/api/v1/account/registrations/#{registration.to_param}/logs" }
 
   describe "/" do
     let!(:registration) { FactoryBot.create(:registration) }
