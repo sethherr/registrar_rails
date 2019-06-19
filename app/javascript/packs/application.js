@@ -32,9 +32,10 @@ $(document).on("turbolinks:load", function() {
   let action_name = body.getAttribute("data-pageaction");
 
   LoadFancySelects();
+  EnableFilenameForUploads();
 
   if (is_admin) {
-    window.adminBase = new AdminBase();
+    const adminBase = AdminBase();
     adminBase.init();
   }
 });

@@ -39,7 +39,7 @@
 
   %h4
     Images
-  .row.mb-4{ style: "overflow: hidden;" }
+  .row.mt-4{ style: "overflow: hidden;" }
     - @registration.public_images.build unless @registration.public_images.count > 1
     - @registration.public_images.build unless @registration.public_images.count > 2
     = f.fields_for :public_images do |builder|

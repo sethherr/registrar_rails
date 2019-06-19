@@ -8,8 +8,7 @@ const EnableFilenameForUploads = () => {
       i++;
     }
     $(this)
-      .parent()
-      .find(".custom-file-label")
+      .next(".custom-file-label")
       .text(files.join(", "));
   });
 };
