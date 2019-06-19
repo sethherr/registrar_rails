@@ -15,13 +15,14 @@ Rails.start();
 Turbolinks.start();
 
 import log from "./utils/log";
-import LocalizeTimes from "./utils/localize_times";
+import TimingUtils from "./utils/timing_utils";
 import LoadFancySelects from "./utils/load_fancy_selects";
 import EnableFilenameForUploads from "./utils/enable_filename_for_uploads";
 import AdminBase from "./pages/admin_base.js";
 
 $(document).on("turbolinks:load", function() {
-  LocalizeTimes();
+  const timingUtils = TimingUtils();
+  timingUtils.localize();
   LoadFancySelects();
   EnableFilenameForUploads();
 

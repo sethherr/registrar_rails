@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 
-const LocalizeTimes = () => {
+const TimingUtils = () => {
   return {
     displayLocalDate(time, preciseTime) {
       // Ensure we return if it's a big future day
@@ -33,7 +33,7 @@ const LocalizeTimes = () => {
       return time.format("YYYY-MM-DD h:mm:ss a");
     },
 
-    localizeTimes() {
+    localize() {
       if (!window.timezone) {
         window.timezone = moment.tz.guess();
       }
@@ -74,4 +74,4 @@ const LocalizeTimes = () => {
   };
 };
 
-export default LocalizeTimes;
+export default TimingUtils;
