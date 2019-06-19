@@ -63,9 +63,13 @@ class RegistrationsController < ApplicationController
     # Recreate the public images attributes, but without empty images
     return {} unless permitted_images_hash.present?
     {
-      registration_images_attributes: permitted_images_hash[:public_images_attributes]
-        .select { |_k, v| v[:image].present? || v[:id].present? }
+      public_images_attributes: permitted_images_hash[:public_images_attributes]
+        .select { |_k, v| v[:image].present? || v[:id].present? },
     }
+  end
+
+  def permitted_images_hash
+    params.require(:registration).permit(public_images_attributes: %i[image description imageable remote_image_url id _destroy])
   end
 
   def new_owner_params

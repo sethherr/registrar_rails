@@ -14,7 +14,30 @@ import "bootstrap/dist/js/bootstrap";
 Rails.start();
 Turbolinks.start();
 
-import "../source/javascript/initializer.js";
+import log from "./utils/log";
+import moment from "moment-timezone";
+import LoadFancySelects from "./utils/load_fancy_selects";
+import EnableFilenameForUploads from "./utils/enable_filename_for_uploads";
+import AdminBase from "./pages/admin_base.js";
+
+$(document).on("turbolinks:load", function() {
+  window.utils = new Utils();
+  utils.localizeTimes();
+  utils.enableEscapeForModals();
+
+  // Load the page specific things
+  let body = document.getElementsByTagName("body")[0];
+  let body_id = body.id;
+  let is_admin = body.classList.contains("admin-body");
+  let action_name = body.getAttribute("data-pageaction");
+
+  LoadFancySelects();
+
+  if (is_admin) {
+    window.adminBase = new AdminBase();
+    adminBase.init();
+  }
+});
 
 // Because it's nice to be able to access jQuery in the console, attach it ;)
 window.$ = window.jQuery = jQuery;
