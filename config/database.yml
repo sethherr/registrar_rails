@@ -78,3 +78,4 @@ production:
   database: registrar_production
   username: registrar
   password: <%= ENV["POSTGRESQL_PASSWORD"] %>
+  pool: 35

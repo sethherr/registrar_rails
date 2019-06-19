@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-base_url = "/api/v1/registrations"
+base_url = "/api/v1/account/registrations"
 
 RSpec.describe base_url, type: :request do
   include_context :api_v1_request_spec

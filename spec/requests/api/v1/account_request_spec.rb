@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-base_url = "/api/v1/user"
+base_url = "/api/v1/account"
 
 RSpec.describe base_url, type: :request do
   include_context :api_v1_request_spec
@@ -25,7 +25,7 @@ RSpec.describe base_url, type: :request do
       end
       it "responds" do
         get base_url, headers: authorization_headers
-        expect(json_result["current_user"]).to eq target.as_json
+        expect(json_result["account"]).to eq target.as_json
         expect(response.code).to eq("200")
       end
       context "with Bike Index authorized" do
@@ -33,7 +33,7 @@ RSpec.describe base_url, type: :request do
         let!(:user_integration) { FactoryBot.create(:user_integration_bike_index, user: user) }
         it "responds" do
           get base_url, headers: authorization_headers
-          expect(json_result["current_user"]).to eq target_with_authorization.as_json
+          expect(json_result["account"]).to eq target_with_authorization.as_json
           expect(response.code).to eq("200")
         end
       end

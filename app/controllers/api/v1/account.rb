@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class API::V1::Registrations < API::Base
-  resource :registrations do
+class API::V1::Account < API::Base
+  resource :account do
     helpers do
       def current_registration
         @current_registration ||= current_user.registrations.friendly_find(params[:registration_id] || params[:id])
@@ -26,14 +26,24 @@ class API::V1::Registrations < API::Base
       end
     end
 
+    desc "Current User's account"
+    get "/" do
+      {
+        account: {
+          name: current_user&.display_name,
+          authorizations: current_user.user_integrations.pluck(:provider)
+        }
+      }
+    end
+
     desc "Current User's registrations"
     params do
       optional :page, type: Integer, desc: "page for pagination"
     end
-    get "/" do
+    get "/registrations" do
       {
         registrations: registrations,
-        links: paginate("registrations"),
+        links: paginate("account/registrations"),
       }
     end
 
@@ -46,7 +56,7 @@ class API::V1::Registrations < API::Base
       optional :manufacturer, type: String, desc: "manufacturer"
       optional :tags_list, type: String, desc: "list of tags, separated by commas"
     end
-    post "/" do
+    post "/registrations" do
       registration = Registration.new(status: params[:status], title: params[:title], description: params[:description],
                                       main_category_tag: params[:main_category], manufacturer_tag: params[:manufacturer],
                                       tags_list: params[:tags_list])
@@ -63,10 +73,10 @@ class API::V1::Registrations < API::Base
     params do
       requires :registration_id, type: String
     end
-    get "/:registration_id/logs" do
+    get "/registrations/:registration_id/logs" do
       {
         logs: registration_logs,
-        links: paginate("registrations/#{params[:registration_id]}/logs"),
+        links: paginate("account/registrations/#{params[:registration_id]}/logs"),
       }
     end
   end
