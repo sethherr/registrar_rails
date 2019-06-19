@@ -36,7 +36,7 @@ CarrierWave.configure do |config|
 
   if Rails.env.production?
     config.fog_provider "fog/aws"
-    # config.asset_host = "https://files.globalidregistrar.net"
+    config.asset_host = "https://files.globalidregistrar.net"
     config.fog_credentials = {
       provider: "AWS",
       aws_access_key_id: Rails.application.credentials.dig(:aws, :access_id),
