@@ -15,10 +15,10 @@ RSpec.describe "/registration_logs", type: :request do
     let(:registration) { FactoryBot.create(:registration_with_current_owner, user: user) }
     let(:valid_params) do
       {
-        title: "new title",
-        description: "a sweet description for my sweet registration_log",
+        information: "This asset was serviced by the things",
+        user_description: "a sweet description for my sweet log",
         kind: "service_record_log",
-        registration_id: registration.id
+        registration_id: registration.id,
       }
     end
     describe "index" do

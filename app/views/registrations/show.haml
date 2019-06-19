@@ -55,7 +55,7 @@
           %th
             Kind
           %th
-            Description
+            Information
           %th
             Images
         %tbody
@@ -75,8 +75,10 @@
                     %em GlobaliD
               %td
                 = registration_log.kind_display.titleize
+                %small
+                  = registration_log.description
               %td
-                = registration_log.description
+                = registration_log.information
               %td
                 .row
                   - registration_log.public_images.each do |image|
