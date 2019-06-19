@@ -34,3 +34,12 @@
     .col-md-6
       .form-group
         = f.submit(:record, class: "btn btn-primary")
+
+  %h4
+    Images
+  .row.mt-4{ style: "overflow: hidden;" }
+    - @registration_log.public_images.build unless @registration_log.public_images.count > 1
+    - @registration_log.public_images.build unless @registration_log.public_images.count > 2
+    = f.fields_for :public_images do |builder|
+      = render "/shared/images_form", f: builder
+

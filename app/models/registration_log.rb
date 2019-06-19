@@ -20,6 +20,8 @@ class RegistrationLog < ApplicationRecord
   belongs_to :ownership
   has_many :public_images, as: :imageable, dependent: :destroy
 
+  accepts_nested_attributes_for :public_images, allow_destroy: true
+
   enum kind: KIND_ENUM
   enum authorizer: AUTHORIZER_ENUM
 

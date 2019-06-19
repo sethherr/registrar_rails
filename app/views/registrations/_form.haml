@@ -43,5 +43,5 @@
     - @registration.public_images.build unless @registration.public_images.count > 1
     - @registration.public_images.build unless @registration.public_images.count > 2
     = f.fields_for :public_images do |builder|
-      = render "images_form", f: builder
+      = render "/shared/images_form", f: builder
 

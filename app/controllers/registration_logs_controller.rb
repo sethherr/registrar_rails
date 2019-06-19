@@ -33,6 +33,20 @@ class RegistrationLogsController < ApplicationController
   def permitted_params
     params.require(:registration_log).permit(:information, :user_description, :kind)
           .merge(authorizer: "authorizer_owner", user: current_user, registration_id: @registration.id)
+          .merge(non_empty_image_params)
+  end
+
+  def non_empty_image_params
+    # Recreate the public images attributes, but without empty images
+    return {} unless permitted_images_hash.present?
+    {
+      public_images_attributes: permitted_images_hash[:public_images_attributes]
+        .select { |_k, v| v[:image].present? || v[:id].present? },
+    }
+  end
+
+  def permitted_images_hash
+    params.require(:registration_log).permit(public_images_attributes: %i[image description imageable remote_image_url id _destroy])
   end
 
   def find_registration
