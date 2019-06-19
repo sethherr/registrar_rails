@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RegistrationLog < ApplicationRecord
+  include Uuidable
   KIND_ENUM = {
     ownership_log: 0,
     appraisal_log: 1,
@@ -22,7 +23,17 @@ class RegistrationLog < ApplicationRecord
   enum kind: KIND_ENUM
   enum authorizer: AUTHORIZER_ENUM
 
-  def kind_display
-    kind&.gsub(/_log/, "")
+  def kind_display; kind&.gsub(/_log/, "") end
+
+  def authorizer_display; authorizer&.gsub("authorizer_", "") end
+
+  def description; user_description.present? ? user_description : auto_description end
+
+  def auto_description
+    if ownership_log?
+      registration.ownerships.count > 1 ? "ownership transfer" : "initial ownership"
+    else
+      "Auto"
+    end
   end
 end

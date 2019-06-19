@@ -14,15 +14,21 @@
         = f.label :kind
         - kinds = [%w[Information information_log], %w[Appraisal appraisal_log], %w[Service service_record_log]]
         = f.select :kind, kinds, {}, { class: "form-control" }
-    .col-sm-6
-      .form-group
-        = f.label :title
-        = f.text_field :title, class: "form-control"
+
   .row
     .col-12
       .form-group
-        = f.label :description
-        = f.text_area :description, class: "form-control"
+        = f.label :information do
+          Information
+          %small
+            The information contained in this log
+        = f.text_area :information, class: "form-control"
+
+  .row
+    .col-12
+      .form-group
+        = f.label :user_description, "Description"
+        = f.text_area :user_description, class: "form-control"
 
   .row.mt-4
     .col-md-6

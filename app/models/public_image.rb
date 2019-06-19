@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PublicImage < ApplicationRecord
+  include Uuidable
   belongs_to :imageable, polymorphic: true
 
   mount_uploader :internal_image, PublicImageUploader

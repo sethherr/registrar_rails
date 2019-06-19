@@ -22,8 +22,16 @@ RSpec.describe base_url, type: :request do
     let(:tag_manufacturer) { FactoryBot.create(:tag_manufacturer) }
     describe "/" do
       let!(:registration) { FactoryBot.create(:registration_with_current_owner, user: user, main_category_tag: tag_main.name, manufacturer_tag: tag_manufacturer.name.upcase) }
-      let(:registration_log_ownership) { registration.current_ownership }
-      let(:registration_log_target) { { recorded_at: registration_log_ownership.created_at.to_i, kind: "ownership", title: nil, description: nil, authorizer: "owner" } }
+      let(:registration_log_ownership) { registration.registration_logs.first }
+      let(:registration_log_target) do
+        {
+          id: registration_log_ownership.to_param,
+          created_at: registration_log_ownership.created_at.to_i,
+          kind: "ownership",
+          description: "initial ownership",
+          authorizer: "owner",
+        }
+      end
       let(:target) do
         {
           id: registration.to_param,
@@ -35,13 +43,14 @@ RSpec.describe base_url, type: :request do
           status: "registered",
           tags_list: [],
           images: [],
-          registration_logs: [registration_log_target]
+          logs: [registration_log_target],
         }
       end
       it "responds" do
         registration.reload
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         get base_url, headers: authorization_headers
+        # Because the registration logs don't match :/ - can't do expect(json_result["registrations"]).to eq([target.as_json])
         expect(json_result["registrations"]).to eq([target.as_json])
         expect(json_result["links"]).to eq target_links(base_url) # In request_spec_helpers
         expect(response.code).to eq("200")
@@ -56,7 +65,7 @@ RSpec.describe base_url, type: :request do
           main_category: tag_main.name,
           manufacturer: tag_manufacturer.name.upcase,
           tags_list: "some tag,another tag, beautiful favorite thing",
-          status: "for_sale"
+          status: "for_sale",
         }
       end
       it "creates" do
@@ -67,7 +76,7 @@ RSpec.describe base_url, type: :request do
         registration = Registration.last
 
         matched_result = json_result["registration"].except(:registered_at, :registration_logs, :tags_list, :manufacturer)
-        expect(matched_result).to eq valid_params.except(:tags_list, :manufacturer).merge(id: registration.to_param, images: []).as_json
+        expect(matched_result.except("logs")).to eq valid_params.except(:tags_list, :manufacturer).merge(id: registration.to_param, images: []).as_json
         expect(registration.manufacturer).to eq tag_manufacturer # separate because capitals
         expect(registration.tags_list).to eq valid_params[:tags_list].split(",").map(&:strip) # separate because array
 

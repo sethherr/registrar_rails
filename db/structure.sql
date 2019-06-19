@@ -37,6 +37,20 @@ COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance betwe
 
 
 --
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+--
 -- Name: unaccent; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -176,7 +190,9 @@ CREATE TABLE public.public_images (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     imageable_type character varying,
-    imageable_id bigint
+    imageable_id bigint,
+    private_image boolean DEFAULT false,
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -212,8 +228,9 @@ CREATE TABLE public.registration_logs (
     authorizer integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title character varying,
-    description text
+    information text,
+    uuid uuid DEFAULT public.gen_random_uuid(),
+    user_description text
 );
 
 
@@ -283,7 +300,7 @@ CREATE TABLE public.registrations (
     updated_at timestamp without time zone NOT NULL,
     title character varying,
     current_owner_id bigint,
-    uuid uuid DEFAULT public.uuid_generate_v4()
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -719,6 +736,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190218210702'),
 ('20190219193533'),
 ('20190219194700'),
-('20190527185828');
+('20190527185828'),
+('20190611181447'),
+('20190612180110'),
+('20190612194613');
 
 

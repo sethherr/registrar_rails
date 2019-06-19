@@ -31,7 +31,7 @@ class RegistrationLogsController < ApplicationController
   private
 
   def permitted_params
-    params.require(:registration_log).permit(:title, :description, :kind)
+    params.require(:registration_log).permit(:information, :user_description, :kind)
           .merge(authorizer: "authorizer_owner", user: current_user, registration_id: @registration.id)
   end
 
