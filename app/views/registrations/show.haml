@@ -36,7 +36,7 @@
     .public-images
       .row
         - @registration.public_images.each do |image|
-          .col-4
+          .col-4.mb-4
             = link_to image.image_url do
               = image_tag(image.image_url(:small))
 
