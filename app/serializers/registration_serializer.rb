@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RegistrationSerializer < ApplicationSerializer
-  attributes :id, :registered_at, :manufacturer, :main_category, :title, :description, :status, :tags_list, :images, :attestations
+  attributes :id, :registered_at, :manufacturer, :main_category, :title, :description, :status, :tags_list, :images, :logs
 
   def id
     object.to_param
@@ -19,16 +19,10 @@ class RegistrationSerializer < ApplicationSerializer
     object.main_category_tag
   end
 
-  def attestations
-    object.attestations.map do |attestation|
-      {
-        recorded_at: attestation.created_at.to_i,
-        kind: attestation.kind_display,
-        title: attestation.title,
-        description: attestation.description,
-        authorizer: attestation.authorizer&.gsub("authorizer_", "")
-      }
-    end
+  def logs
+    ActiveModel::ArraySerializer.new(object.registration_logs.order(id: :desc).limit(5),
+                                     each_serializer: RegistrationLogSerializer,
+                                     root: false).as_json
   end
 
   def images

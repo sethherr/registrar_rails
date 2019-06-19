@@ -3,16 +3,16 @@
 class Ownership < ApplicationRecord
   CREATION_NOTIFICATION_ENUM = {
     no_creation_notification: 0,
-    email_creation_notification: 1
+    email_creation_notification: 1,
   }.freeze
   INITIAL_OWNER_KIND_ENUM = {
     initial_owner_user: 0,
     initial_owner_email: 1,
-    initial_owner_globalid: 2
+    initial_owner_globalid: 2,
   }.freeze
 
   belongs_to :registration
-  has_many :attestations
+  has_many :registration_logs
   belongs_to :user
 
   scope :current, -> { where.not(started_at: nil).where(ended_at: nil) }
@@ -30,12 +30,12 @@ class Ownership < ApplicationRecord
     ownership = create(registration: registration,
                        initial_owner_kind: initial_owner_kind,
                        owner: owner,
-                       started_at: Time.now)
-    Attestation.create(registration: registration,
-                       user: creator.is_a?(User) ? creator : nil,
-                       ownership: ownership,
-                       authorizer: authorizer_for_creator(creator),
-                       kind: "ownership_attestation")
+                       started_at: Time.current)
+    RegistrationLog.create(registration: registration,
+                           user: creator.is_a?(User) ? creator : nil,
+                           ownership: ownership,
+                           authorizer: authorizer_for_creator(creator),
+                           kind: "ownership_log")
     previous_ownership&.mark_no_longer_current
     ownership
   end
@@ -52,7 +52,7 @@ class Ownership < ApplicationRecord
 
   def previous?; started_at.present? && ended_at.present? end
 
-  def authorizer; attestations.reorder(:id).first&.authorizer end
+  def authorizer; registration_logs.reorder(:id).first&.authorizer end
 
   def email
     @email ||= user&.email
@@ -75,13 +75,13 @@ class Ownership < ApplicationRecord
     end
   end
 
-  # Eventually, we may want to add an attestation here too
+  # Eventually, we may want to add an registration_log here too
   def mark_no_longer_current
-    update_attributes(ended_at: Time.now)
+    update_attributes(ended_at: Time.current)
   end
 
   def update_registration_and_send_notification
-    registration&.update_attributes(updated_at: Time.now)
+    registration&.update_attributes(updated_at: Time.current)
     # only send the notification if the id was changed - aka just was created
     SendOwnershipCreationNotificationJob.perform_async(id) if created_at == updated_at
   end

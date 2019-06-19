@@ -1,3 +1,5 @@
+require: rubocop-performance
+
 AllCops:
   TargetRubyVersion: 2.5
   Exclude:
@@ -5,50 +7,29 @@ AllCops:
     - "db/schema.rb"
     - "db/migrate/**/*"
     - "node_modules/**/*"
-    - "spec/*_helper.rb"
-    - "Guardfile"
-    - "documentation/*"
-    - "config/*"
 
-Bundler/OrderedGems:
+Layout:
   Enabled: false
 
-Style/Documentation:
+Metrics/LineLength:
   Enabled: false
 
-Style/SymbolProc:
+Metrics/MethodLength:
   Enabled: false
 
-Style/AndOr:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
-
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
-# I'm a fan of defining convenience methods in single lines
-Style/SingleLineMethods:
-  Enabled: false
-
-ParameterLists:
-  CountKeywordArgs: false
-
-# https://anti-pattern.com/always-use-double-quoted-strings-in-ruby
-Style/StringLiterals:
-  EnforcedStyle: double_quotes # Always do it, lower cost cognitively
-
-NumericLiterals:
+Metrics/ClassLength:
   Enabled: false
 
 Metrics/ModuleLength:
   Exclude:
-    - "spec/**/*.rb"
+    - "**/*_spec.rb"
 
 Metrics/BlockLength:
   Exclude:
-    - "spec/**/*.rb"
+    - "**/*_spec.rb"
 
-Metrics/LineLength:
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+Style:
   Enabled: false

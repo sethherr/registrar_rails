@@ -92,11 +92,11 @@ RSpec.describe "/registrations", type: :request do
         expect(ownership.user).to eq user
         expect(ownership.authorizer).to eq "authorizer_owner"
         expect(ownership.current?).to be_truthy
-        expect(registration.attestations.count).to eq 1
-        attestation = registration.attestations.first
-        expect(attestation.user).to eq user
-        expect(attestation.ownership_attestation?).to be_truthy
-        expect(user.attestations).to eq([attestation])
+        expect(registration.registration_logs.count).to eq 1
+        registration_log = registration.registration_logs.first
+        expect(registration_log.user).to eq user
+        expect(registration_log.ownership_log?).to be_truthy
+        expect(user.registration_logs).to eq([registration_log])
       end
     end
 

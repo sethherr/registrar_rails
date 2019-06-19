@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe "/attestations", type: :request do
-  describe "/attestations" do
+RSpec.describe "/registration_logs", type: :request do
+  describe "/registration_logs" do
     it "redirects" do
-      get "/attestations"
+      get "/registration_logs"
       expect(response).to redirect_to(new_user_session_path)
     end
   end
@@ -15,15 +15,15 @@ RSpec.describe "/attestations", type: :request do
     let(:registration) { FactoryBot.create(:registration_with_current_owner, user: user) }
     let(:valid_params) do
       {
-        title: "new title",
-        description: "a sweet description for my sweet attestation",
-        kind: "service_record_attestation",
-        registration_id: registration.id
+        information: "This asset was serviced by the things",
+        user_description: "a sweet description for my sweet log",
+        kind: "service_record_log",
+        registration_id: registration.id,
       }
     end
     describe "index" do
       it "redirects" do
-        get "/attestations"
+        get "/registration_logs"
         expect(response).to redirect_to(account_path)
       end
     end
@@ -31,7 +31,7 @@ RSpec.describe "/attestations", type: :request do
     describe "show" do
       it "redirects" do
         registration.reload
-        get "/attestations/#{registration.current_ownership.to_param}"
+        get "/registration_logs/#{registration.current_ownership.to_param}"
         expect(response).to redirect_to(account_path)
       end
     end
@@ -39,23 +39,23 @@ RSpec.describe "/attestations", type: :request do
     describe "new" do
       it "renders" do
         registration.reload
-        get "/attestations/new?registration_id=#{registration.id}"
+        get "/registration_logs/new?registration_id=#{registration.id}"
         expect(assigns(:registration)).to eq registration
         expect(response.code).to eq "200"
-        expect(response).to render_template("attestations/new")
+        expect(response).to render_template("registration_logs/new")
       end
       context "not users registration" do
         let(:registration) { FactoryBot.create(:registration_with_current_owner) }
         it "redirects" do
           registration.reload
-          get "/attestations/new?registration_id=#{registration.to_param}"
+          get "/registration_logs/new?registration_id=#{registration.to_param}"
           expect(flash[:error]).to be_present
           expect(response).to redirect_to(account_path)
         end
       end
       context "no registration" do
         it "redirects" do
-          get "/attestations/new?registration_id=xc78xcvnanasdf"
+          get "/registration_logs/new?registration_id=xc78xcvnanasdf"
           expect(response).to redirect_to(account_path)
         end
       end
@@ -65,27 +65,27 @@ RSpec.describe "/attestations", type: :request do
       it "creates" do
         registration.reload
         expect do
-          post "/attestations", params: { attestation: valid_params.merge(registration_id: registration.to_param) }
-        end.to change(Attestation, :count).by 1
+          post "/registration_logs", params: { registration_log: valid_params.merge(registration_id: registration.to_param) }
+        end.to change(RegistrationLog, :count).by 1
         expect(flash[:success]).to be_present
         expect(response).to redirect_to(registration_path(registration))
-        attestation = Attestation.last
+        registration_log = RegistrationLog.last
 
         valid_params.each do |key, value|
-          pp value, key unless attestation.send(key) == value
-          expect(attestation.send(key)).to eq value
+          pp value, key unless registration_log.send(key) == value
+          expect(registration_log.send(key)).to eq value
         end
-        expect(attestation.registration).to eq registration
-        expect(attestation.authorizer_owner?).to be_truthy
-        expect(attestation.user).to eq user
+        expect(registration_log.registration).to eq registration
+        expect(registration_log.authorizer_owner?).to be_truthy
+        expect(registration_log.user).to eq user
       end
       context "not users registration" do
         let(:registration) { FactoryBot.create(:registration_with_current_owner) }
         it "doesn't create" do
           registration.reload
           expect do
-            post "/attestations", params: { attestation: valid_params.merge(registration_id: registration.to_param) }
-          end.to_not change(Attestation, :count)
+            post "/registration_logs", params: { registration_log: valid_params.merge(registration_id: registration.to_param) }
+          end.to_not change(RegistrationLog, :count)
           expect(flash[:error]).to be_present
           expect(response).to redirect_to(account_path)
         end

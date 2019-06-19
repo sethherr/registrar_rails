@@ -1,0 +1,36 @@
+.admin-header
+  %h1
+    Create an registration_log for
+    %em
+      = @registration.title
+
+= form_for @registration_log, url: { action: "create" } do |f|
+  - if @registration_log.errors.any?
+    = render partial: "/shared/errors", locals: { name: "registration log", obj: @registration_log }
+  = f.hidden_field :registration_id
+  .row
+    .col-sm-6
+      .form-group
+        = f.label :kind
+        - kinds = [%w[Information information_log], %w[Appraisal appraisal_log], %w[Service service_record_log]]
+        = f.select :kind, kinds, {}, { class: "form-control" }
+
+  .row
+    .col-12
+      .form-group
+        = f.label :information do
+          Information
+          %small
+            The information contained in this log
+        = f.text_area :information, class: "form-control"
+
+  .row
+    .col-12
+      .form-group
+        = f.label :user_description, "Description"
+        = f.text_area :user_description, class: "form-control"
+
+  .row.mt-4
+    .col-md-6
+      .form-group
+        = f.submit(:record, class: "btn btn-primary")
