@@ -22,60 +22,60 @@ RSpec.describe UpdateBikeIndexRegistrationJob do
       registration = external_registration.registration
       expect(registration.status).to eq "registered"
       expect(external_registration.external_data).to eq target_data
-      expect(external_registration.external_data_at).to be_within(1.seconds).of Time.current
       expect(registration.main_category_tag).to eq "Bicycle"
       expect(registration.manufacturer_tag).to eq "Kona"
       expect(registration.description).to eq "My favorite mountain bike. I put holes in everything"
       expect(registration.title).to eq "2018 Kona Big honzo st"
       expect(registration.ownerships).to eq([])
     end
-    # context "with existing external_registration" do
-    #   let(:registration) do
-    #     FactoryBot.create(:registration, manufacturer_tag: "KKONA",
-    #                                      updated_at: og_time,
-    #                                      description: "Some cool other thing",
-    #                                      title: "party party party")
-    #   end
-    #   let(:external_registration) do
-    #     FactoryBot.create(:external_registration_bike_index, external_data: {},
-    #                                                          external_data_at: og_time,
-    #                                                          registration: registration)
-    #   end
-    #   let!(:public_image) do
-    #     FactoryBot.create(:public_image, name: "some other name",
-    #                                      remote_image_url: "https://files.bikeindex.org/uploads/Pu/136859/image.jpg",
-    #                                      imageable: registration)
-    #   end
-    #   let!(:ownership) { FactoryBot.create(:ownership, registration: registration) }
-    #   it "adds the registration data we expect, overrides manufacturer_tag, doesn't create a new ownership" do
-    #     external_registration.reload
-    #     expect(external_registration.external_data).to eq({})
-    #     expect(external_registration.external_data_at).to be_within(1.seconds).of og_time
-    #     expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
-    #     expect(ownership.current?).to be_truthy
-    #     expect(registration.current_ownership).to eq(ownership)
-    #     VCR.use_cassette("update_bike_index_registration_job-fetch_kona") do
-    #       instance.perform(external_id, ownership.user_id)
-    #     end
-    #     registration.reload
-    #     external_registration.reload
-    #     ownership.reload
-    #     expect(ownership.current?).to be_truthy
-    #     expect(registration.current_ownership).to eq(ownership)
-    #     expect(external_registration.external_data).to eq target_data
-    #     expect(external_registration.external_data_at).to be_within(1.seconds).of Time.current
-    #     expect(registration.updated_at).to be_within(1.seconds).of Time.current
-    #     expect(registration.status).to eq "registered"
-    #     expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
-    #     expect(registration.public_images.count).to eq 4
-    #     expect(public_image.listing_order).to eq 0
-    #     expect(registration.thumb_url).to eq "https://files.bikeindex.org/uploads/Pu/147262/small_IMG_3970.JPG"
-    #     expect(registration.main_category_tag).to eq "Bicycle"
-    #     expect(registration.manufacturer_tag).to eq "KKONA"
-    #     expect(registration.description).to eq "Some cool other thing"
-    #     expect(registration.title).to eq "party party party"
-    #   end
-    # end
+    context "with existing external_registration" do
+      let(:registration) do
+        FactoryBot.create(:registration, manufacturer_tag: "KKONA",
+                                         updated_at: og_time,
+                                         description: "Some cool other thing",
+                                         title: "party party party")
+      end
+      let(:external_registration) do
+        FactoryBot.create(:external_registration_bike_index, external_data: {},
+                                                             external_data_at: og_time,
+                                                             registration: registration)
+      end
+      let(:public_image) do
+        FactoryBot.create(:public_image, name: "some other name",
+                                         remote_image_url: "https://files.bikeindex.org/uploads/Pu/136859/image.jpg",
+                                         imageable: registration)
+      end
+      let!(:ownership) { FactoryBot.create(:ownership, registration: registration) }
+      it "adds the registration data we expect, overrides manufacturer_tag, doesn't create a new ownership" do
+        VCR.use_cassette("update_bike_index_registration_job-fetch_kona_existing") do
+          expect(public_image).to be_present
+          external_registration.reload
+          expect(external_registration.external_data).to eq({})
+          expect(external_registration.external_data_at).to be_within(1.seconds).of og_time
+          expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
+          expect(ownership.current?).to be_truthy
+          expect(registration.current_ownership).to eq(ownership)
+
+          instance.perform(external_id, ownership.user_id)
+        end
+        registration.reload
+        external_registration.reload
+        ownership.reload
+        expect(ownership.current?).to be_truthy
+        expect(registration.current_ownership).to eq(ownership)
+        expect(external_registration.external_data).to eq target_data
+        expect(registration.updated_at).to be_within(1.seconds).of Time.current
+        expect(registration.status).to eq "registered"
+        expect(registration.public_images.pluck(:id).include?(public_image.id)).to be_truthy
+        expect(registration.public_images.count).to eq 4
+        expect(public_image.listing_order).to eq 0
+        expect(registration.thumb_url).to be_present
+        expect(registration.main_category_tag).to eq "Bicycle"
+        expect(registration.manufacturer_tag).to eq "KKONA"
+        expect(registration.description).to eq "Some cool other thing"
+        expect(registration.title).to eq "party party party"
+      end
+    end
     context "stolen bike" do
       let(:external_id) { "623931" }
       let(:target_data) { JSON.parse(File.read(Rails.root.join("spec", "fixtures", "bike_index_stolen.json"))) }
