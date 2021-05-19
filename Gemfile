@@ -10,7 +10,7 @@ gem "rails", "~> 5.2.3"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search" # Full text search - e.g. admin_search in user
 # Use Puma as the app server
-gem "puma", "~> 3.11"
+gem "puma", "~> 4.3"
 
 # API stuff
 gem "active_model_serializers", "~> 0.8.3" # Use active model serializers to serialize JSON. Use version 0.8 because it supports caching
