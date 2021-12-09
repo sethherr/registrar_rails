@@ -11,7 +11,7 @@
     "popper.js": "^1.14.4",
     "rails-ujs": "^5.2.1",
     "sass": "^1.15.2",
-    "swagger-ui": "^3.18.2",
+    "swagger-ui": "^4.1.2",
     "turbolinks": "^5.2.0",
     "selectize": "^0.12.6"
   },
